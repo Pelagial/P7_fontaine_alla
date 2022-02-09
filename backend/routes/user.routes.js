@@ -12,7 +12,7 @@ const router = express.Router();
 const userCtrl = require('../controllers/user.controllers');
 
 /** import requires routes js files */
-router.post('/signup', userCtrl.signUp);
+router.post('/signup', userCtrl.signup);
 
 /** EXPORT ***********************************************/
 module.exports = router;

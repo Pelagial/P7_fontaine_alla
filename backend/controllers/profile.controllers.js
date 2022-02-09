@@ -5,58 +5,13 @@
 /** IMPORT ***********************************************/
 
 /** General import */
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-require("dotenv").config();
-
-const db_import = require("../config/db_config");
+const db_import = require("../config/db-config");
 const db = db_import.DB();
 
 /** EXPORT ***********************************************/
 
-/** userProfile ctrl */
-module.exports.userProfile = async (req, res) => {
-  const { id: idusers } = req.params;
-  const sql = `SELECT * FROM users WHERE idusers = ${idusers}`;
-  db.query(sql, (err, result) => {
-    if (err) {
-      res.status(404).json({ err });
-      throw err;
-    }
-    delete result[0].password;
-    res.status(200).json(result);
-  });
-};
-
-/** updateProfilUser ctrl */
-module.exports.updateProfileUser = async (req, res) => {
-  const { id: idusers } = req.params;
-  const { username, email, password } = req.body;
-
-  const sql = `UPDATE users SET username = '${username}', email = '${email}', password = '${password}' WHERE idusers = ${idusers}`;
-  db.query(sql, (err, result) => {
-    if (err) {
-      res.status(404).json({ err });
-      throw err;
-    }
-    res.status(201).json({ message: "User updated !" });
-  });
-};
-
-/** deleteProfilUser ctrl */
-module.exports.deleteProfileUser = async (req, res) => {
-  const { id: idusers } = req.params;
-  const sql = `DELETE FROM users WHERE idusers = ${idusers}`;
-  db.query(sql, (err, results) => {
-    if (err) {
-      return res.status(404).json({ err });
-    }
-    res.status(200).json("Account deleted");
-  });
-};
-
-/** getAllUser ctrl */
-module.exports.getAllUser = async (req, res) => {
+/** getAllUserProfile ctrl */
+module.exports.getAllUserProfile = async (req, res) => {
   try {
     const sql = 'SELECT `create_time`, `email`, `followers`, `following`, `idusers`, `likes`, `pictures`, `username` FROM users';
     db.query(sql, (err, result) => {
@@ -71,3 +26,46 @@ module.exports.getAllUser = async (req, res) => {
     res.status(400).send({ err })
   }
 };
+
+/** selectOneUserProfile ctrl */
+module.exports.selectOneUserProfile = async (req, res) => {
+  const { id: idusers } = req.params;
+  const sql = `SELECT * FROM users WHERE idusers = ${idusers}`;
+  db.query(sql, (err, result) => {
+    if (err) {
+      res.status(404).json({ err });
+      throw err;
+    }
+    delete result[0].password;
+    res.status(200).json(result);
+  });
+};
+
+/** updateUserProfile ctrl */
+module.exports.updateUserProfile = async (req, res) => {
+  const { id: idusers } = req.params;
+  const { username, email, password } = req.body;
+
+  const sql = `UPDATE users SET username = '${username}', email = '${email}', password = '${password}' WHERE idusers = ${idusers}`;
+  db.query(sql, (err, result) => {
+    if (err) {
+      res.status(404).json({ err });
+      throw err;
+    }
+    res.status(201).json({ message: "User updated !" });
+  });
+};
+
+/** deleteUserProfile ctrl */
+module.exports.deleteUserProfile = async (req, res) => {
+  const { id: idusers } = req.params;
+  const sql = `DELETE FROM users WHERE idusers = ${idusers}`;
+  db.query(sql, (err, results) => {
+    if (err) {
+      return res.status(404).json({ err });
+    }
+    res.status(200).json("Account deleted");
+  });
+};
+
+

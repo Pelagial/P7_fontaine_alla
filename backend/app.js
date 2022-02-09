@@ -29,13 +29,25 @@ app.use((req, res, next) => {
 app.use(helmet());
 app.use(express.json());
 
+/** DB CONNECT ***********************************************/
+const db_import = require("./config/db-config");
+const db = db_import.DB();
+
+db.connect((err) => {
+    if(err){
+        throw err;
+    }
+    console.log('Mysql DB connected !');
+});
 
 /** ROUTES ***********************************************/
 /** Import */
 const userRoutes = require('./routes/user.routes');
+const profileRoutes = require('./routes/profil.routes');
 
 /** Use */
 app.use('/api/user', userRoutes);
+app.use('/api/profile', profileRoutes);
 
 /** EXPORT ***********************************************/
 module.exports = app;

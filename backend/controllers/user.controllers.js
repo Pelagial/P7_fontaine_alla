@@ -9,7 +9,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-const db_import = require("../config/db_config");
+const db_import = require("../config/db-config");
 const db = db_import.DB();
 
 /** EXPORT ***********************************************/
@@ -18,18 +18,27 @@ const db = db_import.DB();
 * Hash the password and send it with the email to DDB
 */
 
-exports.signUp = (req, res, next) => {
-  bcrypt.hash(req.body.password, 10)
-    .then(hash => {
-      const user = new User({
-        email: req.body.email,
-        password: hash
-      });
-      const sql = 'INSERT INTO users SET ?';
-      query = db.query(sql, user, (err, result) => {
-        if (err) res.status(400).json({ message: "Email déjà enregistré" });
+exports.signup = async (req, res) => {
+  try {
+    const hash = await bcrypt.hash(req.body.password, 10);
+    const user = ({
+      username: req.body.username,
+      email: req.body.email,
+      password: hash
+    });
+    const sql = `INSERT INTO users (username, email, password) VALUES ('${user.username}','${user.email}','${user.password}');`;
+    db.query(sql, (err, result) => {
+      if (!result) {
+        res.status(400).json({ message: "Email déjà enregistré" });
+        throw err;
+      } else {
         res.status(201).json({ message: "User created !" });
-      });
-    })
-    .catch(error => res.status(500).json({ message: "Failed registration" }));
+      }
+    });
+  }
+  catch (err) {
+    res.status(500).json({ message: "Failed registration" });
+  }
 };
+
+
