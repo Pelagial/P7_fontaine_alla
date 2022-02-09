@@ -38,6 +38,7 @@ exports.signup = async (req, res) => {
   }
   catch (err) {
     res.status(500).json({ message: "Failed registration" });
+    throw err
   }
 };
 
