@@ -14,11 +14,9 @@ const db = db_import.DB();
 
 /** EXPORT ***********************************************/
 
-/** Signup ctrl 
-* Hash the password and send it with the email to DDB
-*/
-
-exports.signup = async (req, res) => {
+/** Signup ctrl */
+/** Hash the password and send it with the email to DDB */
+exports.signUp = async (req, res) => {
   try {
     const hash = await bcrypt.hash(req.body.password, 10);
     const user = ({
@@ -43,3 +41,24 @@ exports.signup = async (req, res) => {
 };
 
 
+/** signIn ctrl */
+exports.signIn = async (req, res) => {
+  try {
+    
+  }
+  catch (err) {
+    res.status(500).json({ message: "Failed connection" });
+    throw err
+  }
+};
+
+/** logOut ctrl */
+exports.logOut = async (req, res) => {
+  try {
+    
+  }
+  catch (err) {
+    res.status(500).json({ message: "Failed to disconnect" });
+    throw err
+  }
+};
