@@ -13,7 +13,7 @@ const db = db_import.DB();
 /** getAllUserProfile ctrl */
 module.exports.getAllUserProfile = async (req, res) => {
   try {
-    const sql = 'SELECT `create_time`, `email`, `followers`, `following`, `idusers`, `likes`, `pictures`, `username` FROM users';
+    const sql = 'SELECT `create_time`, `email`, `idusers`, `pictures`, `username` FROM users';
     db.query(sql, (err, result) => {
       if (!result) {
         res.status(404).json({ err });

@@ -40,14 +40,17 @@ db.connect((err) => {
     console.log('Mysql DB connected !');
 });
 
+
 /** ROUTES ***********************************************/
 /** Import */
 const userRoutes = require('./routes/user.routes');
 const profileRoutes = require('./routes/profil.routes');
+const publicationRoutes = require('./routes/publication.routes');
 
 /** Use */
 app.use('/api/user', userRoutes);
 app.use('/api/profile', profileRoutes);
+app.use('/api/publication', publicationRoutes);
 
 /** EXPORT ***********************************************/
 module.exports = app;

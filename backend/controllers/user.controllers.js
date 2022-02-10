@@ -16,7 +16,7 @@ const db = db_import.DB();
 
 /** Signup ctrl */
 /** Hash the password and send it with the email to DDB */
-exports.signUp = async (req, res) => {
+module.exports.signUp = async (req, res) => {
   try {
     const hash = await bcrypt.hash(req.body.password, 10);
     const user = ({
@@ -42,20 +42,41 @@ exports.signUp = async (req, res) => {
 
 
 /** signIn ctrl */
-exports.signIn = async (req, res) => {
-  try {
-    
+module.exports.signIn = async (req, res) => {
+  try{
+// Check if user exists in DB 
+    const { email, password } = req.body;
+    const sql = `SELECT idusers, username, password FROM users WHERE email='${email}'`;
+    db.query(sql, (err, result) => {
+        if (err) {
+          return res.status(404).json({ err });
+        }
+// Control if the password is correct
+        const { idusers: idusers, password: hashedPassword } = result[0];
+        bcrypt.compare(password, hashedPassword)
+        .then(valid => {
+// Then if the password isn't correct return a error
+          if (!valid) {
+            return res.status(401).json({ error: 'Mot de passe incorrect !' });
+          }
+// Then if the password is correct creat a token
+          res.cookie ('jwt', jwt.sign({ userId: idusers },process.env.JWT_SECRET_TOKEN,{ expiresIn: '24h' }));
+          res.status(200).json({userId: idusers});
+        })
+        .catch(error => res.status(500).json({ error }));
+    });
   }
   catch (err) {
-    res.status(500).json({ message: "Failed connection" });
+    res.status(500).json({ message: "Failed to connect" });
     throw err
   }
 };
 
 /** logOut ctrl */
-exports.logOut = async (req, res) => {
+module.exports.logOut = async (req, res) => {
   try {
-    
+    res.cookie('jwt', '',{ maxAge: 1 });
+    res.redirect('/');
   }
   catch (err) {
     res.status(500).json({ message: "Failed to disconnect" });

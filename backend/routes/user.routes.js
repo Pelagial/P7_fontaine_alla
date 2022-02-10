@@ -8,6 +8,7 @@
 const express = require('express');
 const router = express.Router();
 
+
 /** import requires js files to use routes */
 const userCtrl = require('../controllers/user.controllers');
 
