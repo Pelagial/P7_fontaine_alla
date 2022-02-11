@@ -9,3 +9,9 @@ Here are the dependancies you need to install:
 
 
 ## Usage ##
+- Run npm i
+- Run nodemon 
+(You should see in your terminal
+Listening on port 'your .env PORT'
+Mysql DB connected !
+If there is any probleme check your dependencies)
