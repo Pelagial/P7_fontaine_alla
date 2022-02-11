@@ -9,18 +9,18 @@ const express = require('express');
 const router = express.Router();
 
 /** import requires js files to use routes */
-const publicationCtrl = require('../controllers/publication.contollers');
+const commentCtrl = require('../controllers/comment.controllers');
 
 /** import requires routes js files */
-router.post('/post', publicationCtrl.creatPublication);
-router.get('/', publicationCtrl.getAllPublication);
-router.get('/:id', publicationCtrl.getOnePublication);
-router.put('/:id',publicationCtrl.updatePublication);
-router.delete('/:id', publicationCtrl.deletePublication);
+// Commment
+router.post('/post', commentCtrl.creatComment);
+router.get('/', commentCtrl.getAllComment);
+router.put('/:id',commentCtrl.updateComment);
+router.delete('/:id', commentCtrl.deleteComment);
 
 // Like Dislike
-router.post('/like', publicationCtrl.like);
-router.delete('/dislike/:id', publicationCtrl.dislike);
+router.post('/like', commentCtrl.like);
+router.delete('/dislike/:id', commentCtrl.dislike);
 
 /** EXPORT ***********************************************/
 module.exports = router;

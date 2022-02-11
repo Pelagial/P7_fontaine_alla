@@ -1,5 +1,5 @@
 /**
- * USER CTRL SETTINGS ***********************************************************************************
+ * PUBLICATION CTRL SETTINGS ***********************************************************************************
  */
 
 /** IMPORT ***********************************************/
@@ -16,9 +16,9 @@ module.exports.creatPublication = async (req, res) => {
       const post = ({
         textContent: req.body.textContent,
         uploadmedia: req.body.uploadmedia
-      })
-      const sql = `INSERT INTO publications SET ?'`;
-      db.query(sql, post, (err, result) => {
+      });
+      const sql = `INSERT INTO publications (textContent, uploadmedia) VALUES ('${post.textContent}','${post.uploadmedia}');`;
+      db.query(sql, (err, result) => {
         if (!result) {
           res.status(400).json({ message: "Un problème est survenue merci de réessayer ulterieurment" });
           throw err;
@@ -32,10 +32,12 @@ module.exports.creatPublication = async (req, res) => {
       throw err
     }
   };
+
+  
 /** getAllPublication ctrl */
 module.exports.getAllPublication = async (req, res) => {
   try {
-    const sql = 'SELECT `create_time`, `email`, `idusers`, `pictures`, `username` FROM users';
+    const sql = 'SELECT * FROM publications ORDER BY create_time DESC ';
     db.query(sql, (err, result) => {
       if (!result) {
         res.status(404).json({ err });
@@ -52,8 +54,8 @@ module.exports.getAllPublication = async (req, res) => {
 /** getOnePublication ctrl */
 module.exports.getOnePublication = async (req, res) => {
   try {
-    const { id: idusers } = req.params;
-    const sql = `SELECT * FROM users WHERE idusers = ${idusers}`;
+    const { id: idpublications } = req.params;
+    const sql = `SELECT * FROM publications WHERE idpublications = ${idpublications}`;
     db.query(sql, (err, result) => {
       if (err) {
         res.status(404).json({ err });
@@ -71,15 +73,18 @@ module.exports.getOnePublication = async (req, res) => {
 /** updatePublication ctrl */
 module.exports.updatePublication = async (req, res) => {
   try {
-    const { id: idusers } = req.params;
-    const { username, email} = req.body;
-    const sql = `UPDATE users SET username = '${username}', email = '${email}' WHERE idusers = ${idusers}`;
+    const { id: idpublications } = req.params;
+    const post = ({
+        textContent: req.body.textContent,
+        uploadmedia: req.body.uploadmedia
+      });
+    const sql = `UPDATE publications SET textContent = '${post.textContent}', uploadmedia = '${post.uploadmedia}' WHERE idpublications = ${idpublications}`;
     db.query(sql, (err, result) => {
       if (err) {
         res.status(404).json({ err });
         throw err;
       }
-      res.status(201).json({ message: "User updated !" });
+      res.status(201).json({ message: "Post updated !" });
     });
   }
   catch (err) {
@@ -90,17 +95,52 @@ module.exports.updatePublication = async (req, res) => {
 /** deletePublication ctrl */
 module.exports.deletePublication = async (req, res) => {
   try {
-    const { id: idusers } = req.params;
-    const sql = `DELETE FROM users WHERE idusers = ${idusers}`;
+    const { id: idpublications } = req.params;
+    const sql = `DELETE FROM publications WHERE idpublications = ${idpublications}`;
     db.query(sql, (err, results) => {
       if (err) {
         return res.status(404).json({ err });
       }
-      res.status(200).json("Account deleted");
+      res.status(200).json("Post deleted");
     });
   }
   catch (err) {
     res.status(400).send({ err })
+  }
+};
+
+/** likes part ***********************************************/
+
+/** likes ctrl */
+module.exports.like = async (req, res) => {
+  try {
+      const sql = `INSERT INTO likesPublications (likeValue) VALUES (1);`;
+      db.query(sql, (err, results) => {
+          if (err) {
+              return res.status(404).json({ err });
+          }
+          res.status(200).json("Publication like");
+      });
+  }
+  catch (err) {
+      res.status(400).send({ err })
+  }
+};
+
+/** dislikes ctrl */
+module.exports.dislike = async (req, res) => {
+  try {
+      const {id: idlikes} = req.params;
+      const sql = `DELETE FROM likesPublications WHERE idlikes = ${idlikes};`;
+      db.query(sql, (err, results) => {
+          if (err) {
+              return res.status(404).json({ err });
+          }
+          res.status(200).json("Publication dislike");
+      });
+  }
+  catch (err) {
+      res.status(400).send({ err })
   }
 };
 

@@ -8,6 +8,7 @@
 const express = require('express');
 const mysql = require('mysql');
 const helmet = require('helmet');
+const fileUpload =  require('express-fileupload');
 
 const app = express();
 require('dotenv').config();
@@ -28,6 +29,9 @@ app.use((req, res, next) => {
  */
 app.use(helmet());
 app.use(express.json());
+app.use(fileUpload({
+    limits: { fileSize: 50 * 1024 * 1024 },
+  }));
 
 /** DB CONNECT ***********************************************/
 const db_import = require("./config/db-config");
@@ -46,11 +50,14 @@ db.connect((err) => {
 const userRoutes = require('./routes/user.routes');
 const profileRoutes = require('./routes/profil.routes');
 const publicationRoutes = require('./routes/publication.routes');
+const commentRoutes = require('./routes/comment.routes');
 
 /** Use */
 app.use('/api/user', userRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/publication', publicationRoutes);
+app.use('/api/comment', commentRoutes);
+
 
 /** EXPORT ***********************************************/
 module.exports = app;

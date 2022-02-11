@@ -15,20 +15,25 @@ require('dotenv').config();
 /** Compare that the actual token is the same as the decoded token */
 module.exports = (req, res, next) => {
   try {
-    const token = req.cookie.jwt;
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET_TOKEN);
-    const userId = decodedToken.userId;
-    req.auth = { userId };  
-    if (req.body.userId && req.body.userId !== userId) {
-      res.cookie('jwt', '', { maxAge: 1 });
-      throw 'Invalid user ID';
+    if (req.cookies.jwt) {
+      const { jwt: token } = req.cookies;
+      const decodedToken = jwt.verify(token, process.env.JWT_SECRET_TOKEN);
+      const { user_id: userId } = decodedToken;
+      let db = dbc.getDB();
+      const sql = `SELECT idusers FROM users WHERE idusers = ${userId}`;
+      db.query(sql, (err, result) => {
+        if (err) res.status(204).json(err);
+        else {
+          next();
+        }
+      });
     } else {
-      next();
+      res.clearCookie();
+      res.status(401).json({ message: "Unauthorized"});
     }
-  } catch {
-    res.cookie('jwt', '', { maxAge: 1 });
-    res.status(401).json({
-      error: new Error('403: unauthorized request.')
-    });
+  } catch (err) {
+    res.clearCookie();
+    console.log(err);
+    res.status(401).json({ message: "Unauthorized" });
   }
 };
