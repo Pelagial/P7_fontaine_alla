@@ -1,5 +1,5 @@
 # P7_fontaine_allan
-# Groupomania Social Network backend#
+# Groupomania Social Network backend #
 
 ## Installation ##
 
@@ -9,6 +9,7 @@ Here are the dependancies you need to install:
 
 
 ## Usage ##
+
 - Run npm i
 - Run nodemon 
 (You should see in your terminal
