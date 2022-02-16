@@ -1,26 +1,21 @@
-<template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
-</template>
-
-<script>
-import HelloWorld from './components/HelloWorld.vue'
-
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+<script setup>
+import { RouterLink, RouterView } from 'vue-router'
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<template>
+  <header>
+    <img alt="Logo de Groupomania" class="logo" src="@/assets/images/logo-black.png" width="125" height="125" />
+    <div class="nav-bar_wrapper">
+      <nav>
+        <RouterLink to="/"><fa class="home" icon="house" /></RouterLink>
+        <RouterLink to="/Publication"><fa class="add-post" icon="circle-plus" /></RouterLink>
+        <RouterLink to="/profile"><div class="user-profile"></div></RouterLink>
+      </nav>
+    </div>
+  </header>
+  <RouterView />
+</template>
+
+<style lang='scss'>
+@import '@/assets/sass/style.scss';
 </style>
