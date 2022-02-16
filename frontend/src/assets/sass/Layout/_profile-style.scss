@@ -1,0 +1,48 @@
+//Import variables.scss to use color palette
+@import "../Utils/variables";
+
+// Import mixins.scss
+@import "../Utils/mixins";
+
+.profile{
+    display: flex;
+    flex-direction: column;
+    &_header{
+        background-color: $background-color;
+        width: 100%;
+        height: 50px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 2%;
+        &-home{
+            width:30px;
+            height: 30px;
+        }
+        
+    }
+    &_user-infos{
+        padding: 2% 2% 2% 5%;
+        margin-top: 2%;
+    }
+    &_user-publications{
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        margin-top: 5%;
+        margin-bottom: 5%;
+    }
+    &_user-action{
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        width: 90%;
+        height: 50px;
+        margin-left: 5%;
+        &-update, &-logout, &-delete{
+            width:30px;
+            height: 30px;
+        }
+    }
+}

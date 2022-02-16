@@ -1,0 +1,21 @@
+//Import variables.scss to use color palette
+@import "../Utils/variables";
+
+/*** general_mixins ***/
+@mixin flex-center {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+@mixin column-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+
+/*** color-style_mixins ***/
+@mixin card-color{
+    background-color: $background-color;
+}

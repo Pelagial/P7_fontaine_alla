@@ -1,0 +1,11 @@
+//Import variables.scss to use color palette
+@import "../Utils/variables";
+
+// Import mixins.scss
+@import "../Utils/mixins";
+
+// Global style settings
+.publications_wrapper{
+    margin-top: 12%;
+    @include column-center;
+}

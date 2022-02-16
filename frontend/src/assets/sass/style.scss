@@ -3,5 +3,15 @@
 @import "../sass/Base/font";
 
                                         /*import_design*/
+
+                                        /*Variables*/                                        
 @import "../sass/Utils/variables";
+
+                                        /*Composants*/
+@import "../sass/Composants/header-style-settings";
 @import "../sass/Composants/nav-bar-bottom";
+@import "../sass/Composants/publication_card";
+
+                                        /*Layout*/
+@import "../sass/Layout/general-style-settings";
+@import "../sass/Layout/profile-style";
