@@ -1,8 +1,13 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+
+
 </script>
 
 <template>
+<div class="user-signup">
+
+</div>
 <RouterView />
 </template>
 

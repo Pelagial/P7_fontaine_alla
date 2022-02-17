@@ -1,0 +1,40 @@
+//Import variables.scss to use color palette
+@import "../Utils/variables";
+
+// Import mixins.scss
+@import "../Utils/mixins";
+
+
+.comment_formular{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+.comment{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 90%;
+    height: auto;
+    &_content{
+        @include column-center;
+        width: 100%;
+        height: auto;
+        margin-top: 5%;
+        &-text-content{
+            @include column-center;
+            width: 100%;
+            height: 120px;
+            margin-top: 10%;
+            margin-bottom: 2%
+        }
+        &-text{
+            width: 100%;
+            height: 120px;
+        }
+    }
+}
+ 
+

@@ -52,13 +52,10 @@
         </div>
       </div>
       <div class="profile_user-action">
-        <fa class="profile_user-action-update" icon="pen-to-square" />
-        <fa class="profile_user-action-logout" icon="arrow-right-to-bracket" />
-        <fa class="profile_user-action-delete" icon="trash-can" />
+        <RouterLink to="profile/update"><fa class="profile_user-action-update" icon="pen-to-square" /></RouterLink>
+        <span><fa class="profile_user-action-logout" icon="arrow-right-to-bracket" /></span>
+        <span><fa class="profile_user-action-delete" icon="trash-can" /></span>
       </div>
     </main>
   </div>  
 </template>
-
-<style>
-</style>

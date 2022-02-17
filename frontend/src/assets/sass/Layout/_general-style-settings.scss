@@ -6,6 +6,22 @@
 
 // Global style settings
 .publications_wrapper{
-    margin-top: 12%;
+    margin-top: 4%;
     @include column-center;
+}
+
+input, textarea{
+    background-color: $background-color;
+    border-radius: 20px;
+    padding: 2%;
+    margin: 2%;
+    text-align: center;
+}
+
+button{
+    background-color: $complementary-secondary-color;
+    border-radius: 18px;
+    padding: 2%;
+    margin: 2%;
+    text-align: center;
 }

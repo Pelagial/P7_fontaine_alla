@@ -1,5 +1,5 @@
 <template>
-  <!--Publication_header-->
+  <!--Comment_header-->
   <header class="publication-header">
     <RouterLink to="/">
       <fa class="publication-home" icon="arrow-left" />
@@ -14,25 +14,13 @@
               </div>
             </div>
   </header>
-  <!--Publication_header_end-->
+  <!--Comment_header_end-->
 
-  <!--Publication_formular-->
-  <div class="publication_formular">
-    <form class="publication">
-      <div class="publication_content">
-        <div class="publication_content-media-upload">
-          <label for="uploadmedia">
-            <strong>Choisi un media à partager</strong>
-          </label>
-          <input
-            class="publication_content-media"
-            type="file"
-            name="uploadmedia"
-            accept="image/video/*"
-            capture
-          />
-        </div>
-        <div class="publication_content-text-content">
+  <!--Comment_formular-->
+  <div class="comment_formular">
+    <form class="comment">
+      <div class="comment_content">
+        <div class="comment_content-text-content">
           <label for="textContent">
             <strong>Commentaire</strong>
           </label>

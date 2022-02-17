@@ -43,6 +43,49 @@
         &-update, &-logout, &-delete{
             width:30px;
             height: 30px;
+            &:hover{
+                cursor: pointer;
+                color: $color-secondary;
+            }
         }
     }
 }
+
+// Update Profile View Style
+
+.profile_update{
+    width: 90%;
+    height: auto;
+    &-wrapper{
+        width: 100%;
+        height: auto;
+    }
+    &-container{
+        width: 100%;
+        height: auto;
+        @include column-center
+    }
+    &-profile_user-img{
+        @include column-center;
+        & input{
+            background-color: transparent;
+            border-radius: 0;
+            padding: 2%;
+            margin: 2%;
+            text-align: center;
+        }
+    }
+    &-profile_info{
+        @include column-center;
+        margin-top: 2%;
+        & label{
+            @include column-center;
+        }
+    }
+    &-bio{
+        width: 90%;
+        height: 120px;    
+    }
+}
+ 
+
