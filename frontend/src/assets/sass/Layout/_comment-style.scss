@@ -5,6 +5,7 @@
 @import "../Utils/mixins";
 
 
+/////////////////////////////////////* main_design_(mobile) */
 .comment_formular{
     display: flex;
     flex-direction: column;
@@ -36,5 +37,18 @@
         }
     }
 }
- 
+
+/////////////////////////////////////* responsive_design_(tablette&desktop) */
+
+/////////////////////*responsive_tablet*/
+
+
+/////////////////////*responsive_desktop*/
+
+@media only screen and (min-width: 1024px) {
+    .comment{
+        margin-top: 10%;
+        max-width: 800px;
+    }
+}
 

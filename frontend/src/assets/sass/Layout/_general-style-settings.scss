@@ -4,9 +4,18 @@
 // Import mixins.scss
 @import "../Utils/mixins";
 
+
+/////////////////////////////////////* main_design_(mobile) */
+
 // Global style settings
+main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .publications_wrapper{
-    margin-top: 4%;
+    margin-top: 10%;
+    max-width: 800px;
     @include column-center;
 }
 
@@ -28,4 +37,22 @@ button{
 
 .button--disabled{
     opacity: .2;
+}
+
+/////////////////////////////////////* responsive_design_(tablette&desktop) */
+
+/////////////////////*responsive_tablet*/
+@media only screen and (min-width: 450px) {
+ 
+}
+
+/////////////////////*responsive_desktop*/
+
+@media only screen and (min-width: 1024px) {
+    .header_logo-groupomania{
+        display: none;
+    }
+    .publications_wrapper{
+        margin-top: 0;
+    }
 }

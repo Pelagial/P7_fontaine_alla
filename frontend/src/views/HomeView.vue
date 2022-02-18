@@ -7,14 +7,33 @@
   </header>
 <!--header_end-->
 
-<!--nav_bar-->
-  <div class="welcome-message">
-    <h1>Bienvenue Tom Ramalho</h1>
-  </div>
+<!--nav_bar_header-->
+  <nav class="nav-bar-header_wrapper">
+      <div class="nav-bar-header_logo-groupomania">
+        <img alt="Logo de Groupomania" class="logo" src="../assets/images/logos/logo-black.png" />
+      </div>
+      <div class="nav-bar-header_menu">
+        <RouterLink to="/">
+        <fa class="nav-bar-header_home" icon="house" />
+      </RouterLink>
+      <RouterLink to="/Publication">
+        <fa class="nav-bar-header_add-post" icon="circle-plus" />
+      </RouterLink>
+      <RouterLink to="/profile">
+        <div class="nav-bar-header_user-profile">
+          <img
+            class="user_img"
+            src="../assets/images/profile_picture/default/tom-ramalho-NZaFD7tKhC8-unsplash.jpg"
+            alt="Photo de profil de tom-ramalho"
+          />
+        </div>
+      </RouterLink>
+      </div>
+    </nav>
+<!--nav_bar_header_end-->
+
+<!--nav_bar_bottom-->
   <nav class="nav-bar_wrapper">
-    <div class="nav-bar_logo-groupomania">
-      <img alt="Logo de Groupomania" class="logo" src="../assets/images/logos/logo-black.png" />
-    </div>
     <RouterLink to="/">
       <fa class="nav-bar_home" icon="house" />
     </RouterLink>
@@ -88,18 +107,19 @@
       </div>
       <!--Publication_card_END-->
 
-      <!--Test---------------------------------------------------------->
+
+      <!-------------------------------------test-->
       <!--Publication_card-->
       <div class="publication-card">
-   
+        
           <!--user_profil_info-->
           <RouterLink to="/profile">
             <div class="publication-card_user-profile">
-              <h2 class="publication-card_user-name">Alexey Demidov</h2>
+              <h2 class="publication-card_user-name">Chandri Anggara</h2>
               <div class="publication-card_user-img">
                 <img
-                  src="../assets/images/profile_picture/default/ehimetalor-akhere-unuabona-Vc8tLPRMYV8-unsplash.jpg"
-                  alt="Photo de profil de alexey demidov"
+                  src="../assets/images/profile_picture/default/chandri-anggara-hoatnUWFiuc-unsplash.jpg"
+                  alt="Photo de profil de tom-ramalho"
                 />
               </div>
             </div>
@@ -117,8 +137,21 @@
           <!--publication_media_end-->
           <!--publication_text-->
           <div class="publication-card_infos">
+            <div class="publication-card_under-media-bar">
+              <div class="publication-card_datetime">
+                <p><strong>2 février 2022</strong></p>
+              </div>
+              <div class="publication-card_like-comment-btn">
+                <!-- <fa class="commented publication-card_comment-btn" icon="comment" /> -->
+                <RouterLink to="/comment"><fa class="publication-card_comment-btn" :icon="['far', 'comment']" /></RouterLink>
+                <!-- <fa class="liked publication-card_like-btn" icon="heart" /> -->
+                <fa class="publication-card_like-btn" :icon="['far', 'heart']"  />
+              </div>
+            </div>
             <div class="publication-card_text">
-              <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit.</p>
+              <p>
+                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+              </p>
             </div>
             <div class="comment"></div>
           </div>
@@ -126,16 +159,17 @@
       </div>
       <!--Publication_card_END-->
 
-      <!--Publication_card-->
+  <!--Publication_card-->
       <div class="publication-card">
+        
           <!--user_profil_info-->
           <RouterLink to="/profile">
             <div class="publication-card_user-profile">
-              <h2 class="publication-card_user-name">Chandri Anggara</h2>
+              <h2 class="publication-card_user-name">Alban Gillot</h2>
               <div class="publication-card_user-img">
                 <img
-                  src="../assets/images/profile_picture/default/chandri-anggara-hoatnUWFiuc-unsplash.jpg"
-                  alt="Photo de profil de chandri-anggara"
+                  src="../assets/images/profile_picture/default/ehimetalor-akhere-unuabona-Vc8tLPRMYV8-unsplash.jpg"
+                  alt="Photo de profil de tom-ramalho"
                 />
               </div>
             </div>
@@ -153,10 +187,21 @@
           <!--publication_media_end-->
           <!--publication_text-->
           <div class="publication-card_infos">
+            <div class="publication-card_under-media-bar">
+              <div class="publication-card_datetime">
+                <p><strong>22 janvier 2022</strong></p>
+              </div>
+              <div class="publication-card_like-comment-btn">
+                <!-- <fa class="commented publication-card_comment-btn" icon="comment" /> -->
+                <RouterLink to="/comment"><fa class="publication-card_comment-btn" :icon="['far', 'comment']" /></RouterLink>
+                <!-- <fa class="liked publication-card_like-btn" icon="heart" /> -->
+                <fa class="publication-card_like-btn" :icon="['far', 'heart']"  />
+              </div>
+            </div>
             <div class="publication-card_text">
               <p>
                 Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Alias nisi nam dicta impedit ab voluptas quaerat! Libero aperiam optio.
+                Alias nisi nam dicta impedit ab voluptas quaerat molestiae optio.
               </p>
             </div>
             <div class="comment"></div>
@@ -164,14 +209,18 @@
           <!--publication_text_end-->
       </div>
       <!--Publication_card_END-->
+<!-------------------------------------test-->
 
-      <!--Test---------------------------------------------------------->
+
     </div>
   </main>
-  <footer>
-    <RouterLink to="./login"><fa class="login-btn" icon="circle-plus" /></RouterLink>
-  </footer>
 <!--publication_end-->
 
+
+
+
+<footer>
+    <RouterLink to="./login"><fa class="login-btn" icon="circle-plus" /></RouterLink>
+</footer>
   <RouterView />
 </template>

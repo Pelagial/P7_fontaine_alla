@@ -53,7 +53,7 @@ const publicationRoutes = require('./routes/publication.routes');
 const commentRoutes = require('./routes/comment.routes');
 
 /** Use */
-app.use('/api/user', userRoutes);
+app.use('/api/', userRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/publication', publicationRoutes);
 app.use('/api/comment', commentRoutes);

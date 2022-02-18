@@ -1,20 +1,21 @@
                                         /*import_general*/
-@import "../sass/Base/reset";
-@import "../sass/Base/font";
+@import "./Base/reset";
+@import "./Base/font";
 
                                         /*import_design*/
 
                                         /*Variables*/                                        
-@import "../sass/Utils/variables";
+@import "./Utils/variables";
 
                                         /*Composants*/
-@import "../sass/Composants/header-style-settings";
-@import "../sass/Composants/nav-bar-bottom";
-@import "../sass/Composants/publication_card";
+@import "./Composants/header-style-settings";
+@import "./Composants/nav-bar-bottom";
+@import "./Composants/publication_card";
+@import "./Composants/nav-bar-header";
 
                                         /*Layout*/
-@import "../sass/Layout/general-style-settings";
-@import "../sass/Layout/profile-style";
-@import "../sass/Layout/publication-style";
-@import "../sass/Layout/comment-style";
-@import "../sass/Layout/login-style";
+@import "./Layout/general-style-settings";
+@import "./Layout/profile-style";
+@import "./Layout/publication-style";
+@import "./Layout/comment-style";
+@import "./Layout/login-style";

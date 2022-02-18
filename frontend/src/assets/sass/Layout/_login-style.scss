@@ -3,105 +3,176 @@
 
 // Import mixins.scss
 @import "../Utils/mixins";
-.header-login{
+
+/////////////////////////////////////* main_design_(mobile) */
+.header-login {
     width: 50%;
     height: auto;
     position: absolute;
     top: 0;
     left: 25%;
     right: 25%;
-
 }
-.inactive{
-    opacity: .2;
-    &:active{
+.inactive {
+    opacity: 0.2;
+    &:active {
         opacity: 1;
-        transition: .1s;
+        transition: 0.1s;
     }
 }
-.sign-up{
+.sign-up {
     @include column-center;
     width: 100%;
-    height: 52vh;
-    margin-top: 50%;
-    &_formular{
+    max-height: 52vh;
+    margin-top: 45%;
+    &_formular {
         background-color: $color-tertiary;
         width: 95%;
         height: 100%;
         padding-top: 5%;
-        border-radius:25px 25px 0 0;
+        border-radius: 25px;
     }
-    &_choice-title{
+    &_choice-title {
         display: flex;
         justify-content: space-around;
         align-items: center;
         width: 100%;
         height: 100%;
         margin-bottom: 10%;
+        cursor: pointer;
     }
-    &_formcontainer, &_container{
+    &_formcontainer,
+    &_container {
         @include column-center;
         width: 100%;
         height: 100%;
-        & label, & input{
+        & label,
+        & input {
             margin-top: 2%;
         }
-        & button{
+        & button {
             margin-bottom: 5%;
         }
     }
-    &_container-remember-me{
+    &_container-remember-me {
         display: flex;
-        justify-content: space-around;
         align-items: center;
+        justify-content: center;
         width: 100%;
         height: 100%;
         border-radius: 0 0 25px 25px;
+        & span {
+            width: 100%;
+            height: 100%;
+            padding-left: 10%;
+        }
     }
 }
-.login{
+.login {
     @include column-center;
     width: 100%;
-    height: 42vh;
-    margin-top: 50%;
-    &_formular{
+    max-height: 42vh;
+    margin-top: 45%;
+    &_formular {
         background-color: $color-tertiary;
         width: 95%;
         height: 100%;
         padding-top: 5%;
-        border-radius:25px 25px 0 0;
+        border-radius: 25px;
     }
-    &_choice-title{
+    &_choice-title {
         display: flex;
         justify-content: space-around;
         align-items: center;
         width: 100%;
         height: 100%;
         margin-bottom: 10%;
+        cursor: pointer;
     }
-    &_formcontainer, &_container{
+    &_formcontainer,
+    &_container {
         @include column-center;
         width: 100%;
         height: 100%;
-        & label, & input{
+        & label,
+        & input {
             margin-top: 2%;
         }
-        & button{
+        & button {
             margin-bottom: 5%;
         }
     }
-    &_container-remember-me{
+    &_container-remember-me {
         display: flex;
-        justify-content: space-around;
         align-items: center;
+        justify-content: center;
         width: 100%;
         height: 100%;
         border-radius: 0 0 25px 25px;
+        & span {
+            width: 100%;
+            height: 100%;
+            padding-left: 10%;
+        }
     }
 }
 
-.login-btn{
+.rememberAndCheckbox {
+    width: 100%;
+    max-height: 50px;
+    display: flex;
+    align-items: center;
+    padding-left: 5%;
+    & label {
+        width: 100%;
+        height: 100%;
+        padding: 6.5%;
+    }
+}
+.login-btn {
     margin-bottom: 50%;
 }
- 
 
+/////////////////////////////////////* responsive_design_(tablette&desktop) */
+
+/////////////////////*responsive_tablet*/
+@media only screen and (min-width: 450px) {
+    .sign-up{
+        margin-top: 45%;
+        &_formular{
+            max-width: 450px;
+        }
+    }
+    .login{
+        margin-top: 45%;
+        &_formular{
+            max-width: 450px;
+        }
+    }
+    
+}
+
+/////////////////////*responsive_desktop*/
+
+@media only screen and (min-width: 1024px) {
+    .header-login {
+        width: 20%;
+        height: auto;
+        position: absolute;
+        top: 0;
+        left: 40%;
+        right: 40%;
+    }
+    .sign-up{
+        margin-top: 20%;
+        &_formular{
+            max-width: 450px;
+        }
+    }
+    .login{
+        margin-top: 20%;
+        &_formular{
+            max-width: 450px;
+        }
+    }
+}

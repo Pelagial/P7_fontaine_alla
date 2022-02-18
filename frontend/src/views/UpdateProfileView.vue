@@ -1,13 +1,13 @@
 <template>
-    <div class="profile">
-        <header class="profile_header">
+ <header class="profile_header">
             <RouterLink to="/profile">
                 <fa class="profile_header-home" icon="arrow-left" />
             </RouterLink>
             <h1 class="profile_header-user-name">Tom Ramalho</h1>
         </header>
-
-        <div class="profile_user-img">
+    <div class="profile_update-wrapper">
+        <div class="profile_update-content">
+            <div class="profile_user-img">
             <img
                 src="../assets/images/profile_picture/default/tom-ramalho-NZaFD7tKhC8-unsplash.jpg"
                 alt="Photo de profil de tom-ramalho"
@@ -39,6 +39,7 @@
                     </div>
                 <button class="publication-button" type="submit">MODIFIER LE PROFIL</button>
             </form>
+        </div>
         </div>
     </div>
 </template>
