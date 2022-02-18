@@ -1,7 +1,7 @@
 <template>
   <!--Comment_header-->
   <header class="publication-header">
-    <RouterLink to="/">
+    <RouterLink to="/home">
       <fa class="publication-home" icon="arrow-left" />
     </RouterLink>
     <div class="publication-header_user-profile">

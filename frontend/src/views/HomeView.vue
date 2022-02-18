@@ -13,7 +13,7 @@
         <img alt="Logo de Groupomania" class="logo" src="../assets/images/logos/logo-black.png" />
       </div>
       <div class="nav-bar-header_menu">
-        <RouterLink to="/">
+        <RouterLink to="/home">
         <fa class="nav-bar-header_home" icon="house" />
       </RouterLink>
       <RouterLink to="/Publication">
@@ -34,7 +34,7 @@
 
 <!--nav_bar_bottom-->
   <nav class="nav-bar_wrapper">
-    <RouterLink to="/">
+    <RouterLink to="/home">
       <fa class="nav-bar_home" icon="house" />
     </RouterLink>
     <RouterLink to="/Publication">
@@ -217,10 +217,5 @@
 <!--publication_end-->
 
 
-
-
-<footer>
-    <RouterLink to="./login"><fa class="login-btn" icon="circle-plus" /></RouterLink>
-</footer>
   <RouterView />
 </template>

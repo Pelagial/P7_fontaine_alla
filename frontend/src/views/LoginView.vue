@@ -51,7 +51,7 @@
                 <label for="password"><strong>Password</strong></label>
                 <input v-model="password" type="password" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2, 3}$" placeholder="Enter Password" name="password" required>
             </div>
-            <button type="submit" :class="{'button--disabled' : !validatedFields}">LOGIN</button>
+            <RouterLink to="/home"><button type="submit" :class="{'button--disabled' : !validatedFields}">LOGIN</button></RouterLink>
             <div class="sign-up_container-remember-me" style="background-color: #eee">
                 <div class="rememberAndCheckbox">
                     <input type="checkbox"  check="checked" name="remember">

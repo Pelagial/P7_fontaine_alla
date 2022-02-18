@@ -1,7 +1,7 @@
 <template>
   <div class="profile">
     <header class="profile_header">
-      <RouterLink to="/">
+      <RouterLink to="/home">
         <fa class="profile_header-home" icon="arrow-left" />
       </RouterLink>
       <h1 class="profile_header-user-name">Tom Ramalho</h1>
@@ -66,7 +66,9 @@
               <fa class="profile_user-action-update" icon="pen-to-square" />
             </RouterLink>
             <span>
+            <RouterLink to="/">
               <fa class="profile_user-action-logout" icon="arrow-right-to-bracket" />
+            </RouterLink>
             </span>
             <span>
               <fa class="profile_user-action-delete" icon="trash-can" />
