@@ -50,3 +50,8 @@
   </div>
   <!--Publication_formular_end-->
 </template>
+
+
+<script>
+
+</script>

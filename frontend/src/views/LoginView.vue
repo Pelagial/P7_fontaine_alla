@@ -17,13 +17,13 @@
                 <div class="sign-up_formcontainer">
                     <div class="sign-up_container">
                         <label for="username"><strong>Username</strong></label>
-                        <input v-model="username" type="text" pattern="/^[a-z\d]+$/i" placeholder="Enter Username" name="username" required>
+                        <input v-model="username" type="text" placeholder="Enter Username" name="username" required>
                         <label for="email"><strong>E-mail</strong></label>
-                        <input v-model="email" type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" placeholder="Enter E-mail" name="email" required>
+                        <input v-model="email" type="email" placeholder="Enter E-mail" name="email" required>
                         <label for="password"><strong>Password</strong></label>
-                        <input v-model="password" type="password" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2, 3}$" placeholder="Enter Password" name="password" required>
+                        <input v-model="password" type="password" placeholder="Enter Password" name="password" required>
                     </div>
-                    <button @click.prevent="createAccount()" :class="{'button--disabled' : !validatedFields}"><strong>SIGN UP</strong></button>
+                    <button @click.prevent="createAccount()" :class="{'button--disabled' : !validatedFields }"><strong>SIGN UP</strong></button>
                     <div class="sign-up_container-remember-me" style="background-color: #eee">
                         <div class="rememberAndCheckbox">
                             <input type="checkbox"  check="checked" name="remember">
@@ -47,11 +47,11 @@
             <hr/>
             <div class="login_container">
                 <label for="email"><strong>E-mail</strong></label>
-                <input v-model="email" type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" placeholder="Enter Your E-mail" name="email" required>
+                <input v-model="email" type="email" placeholder="Enter Your E-mail" name="email" required>
                 <label for="password"><strong>Password</strong></label>
-                <input v-model="password" type="password" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2, 3}$" placeholder="Enter Password" name="password" required>
+                <input v-model="password" type="password" placeholder="Enter Password" name="password" required>
             </div>
-            <RouterLink to="/home"><button type="submit" :class="{'button--disabled' : !validatedFields}">LOGIN</button></RouterLink>
+            <button @click.prevent="login()" type="submit" :class="{ 'button--disabled' : !validatedFields }"><RouterLink to="/home">LOGIN</RouterLink></button>
             <div class="sign-up_container-remember-me" style="background-color: #eee">
                 <div class="rememberAndCheckbox">
                     <input type="checkbox"  check="checked" name="remember">
@@ -85,7 +85,7 @@ export default {
                     return false;
                 }
             } else {
-                if(this.username != "" && this.password != "") {
+                if(this.email != "" && this.password != "") {
                         return true;
                     } else {
                         return false;
@@ -100,6 +100,16 @@ export default {
         switchToLogin(){
             this.mode ='login';
         },
+        login(){
+            this.$store.dispatch('login', {
+                email: this.email,
+                password: this.password
+            }).then(function(response){
+            console.log(response);
+            }, function (error){
+                console.log(error);
+            })
+        },
         createAccount(){
             this.$store.dispatch('createAccount', {
                 username: this.username,
@@ -107,8 +117,30 @@ export default {
                 password: this.password
             }).then(function(response){
             console.log(response);
+            }, function (error){
+                console.log(error);
             })
-            
+        },
+        validUsername(){
+            if (/^[a-z\d]+$/i.test(this.username) != true){
+                console.log('username invalid');
+            } else {
+                console.log('username valid');
+            }
+        },
+        validEmail(){
+            if (/^[a-zA-Z]{5,30}@[a-z\._-]{5,20}$/.test(this.username) != true){
+                console.log('email invalid');
+            } else {
+                console.log('email valid');
+            }
+        },
+        validPassword(){
+            if (/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2, 3}$/.test(this.password) != true){
+                console.log('password invalid');
+            } else {
+                console.log('password valid');
+            }
         }
     }
 }

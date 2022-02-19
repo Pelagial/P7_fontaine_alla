@@ -135,22 +135,6 @@
 
 /////////////////////////////////////* responsive_design_(tablette&desktop) */
 
-/////////////////////*responsive_tablet*/
-@media only screen and (min-width: 450px) {
-    .sign-up{
-        margin-top: 45%;
-        &_formular{
-            max-width: 450px;
-        }
-    }
-    .login{
-        margin-top: 45%;
-        &_formular{
-            max-width: 450px;
-        }
-    }
-    
-}
 
 /////////////////////*responsive_desktop*/
 
@@ -159,7 +143,7 @@
         width: 20%;
         height: auto;
         position: absolute;
-        top: 0;
+        top: -50px;
         left: 40%;
         right: 40%;
     }
