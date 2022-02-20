@@ -106,112 +106,6 @@
           <!--publication_text_end-->
       </div>
       <!--Publication_card_END-->
-
-
-      <!-------------------------------------test-->
-      <!--Publication_card-->
-      <div class="publication-card">
-        
-          <!--user_profil_info-->
-          <RouterLink to="/profile">
-            <div class="publication-card_user-profile">
-              <h2 class="publication-card_user-name">Chandri Anggara</h2>
-              <div class="publication-card_user-img">
-                <img
-                  src="../assets/images/profile_picture/default/chandri-anggara-hoatnUWFiuc-unsplash.jpg"
-                  alt="Photo de profil de tom-ramalho"
-                />
-              </div>
-            </div>
-          </RouterLink>
-          <!--user_profil_info_end-->
-
-          <!--publication_media-->
-          <div class="publication-card_media-upload">
-            <img
-              class="publication_media"
-              src="../assets/images/danist-soh-5LjfTAZMS10-unsplash.jpg"
-              alt="Photo de plusieur personnes qui boivent un verre"
-            />
-          </div>
-          <!--publication_media_end-->
-          <!--publication_text-->
-          <div class="publication-card_infos">
-            <div class="publication-card_under-media-bar">
-              <div class="publication-card_datetime">
-                <p><strong>2 février 2022</strong></p>
-              </div>
-              <div class="publication-card_like-comment-btn">
-                <!-- <fa class="commented publication-card_comment-btn" icon="comment" /> -->
-                <RouterLink to="/comment"><fa class="publication-card_comment-btn" :icon="['far', 'comment']" /></RouterLink>
-                <!-- <fa class="liked publication-card_like-btn" icon="heart" /> -->
-                <fa class="publication-card_like-btn" :icon="['far', 'heart']"  />
-              </div>
-            </div>
-            <div class="publication-card_text">
-              <p>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-              </p>
-            </div>
-            <div class="comment"></div>
-          </div>
-          <!--publication_text_end-->
-      </div>
-      <!--Publication_card_END-->
-
-  <!--Publication_card-->
-      <div class="publication-card">
-        
-          <!--user_profil_info-->
-          <RouterLink to="/profile">
-            <div class="publication-card_user-profile">
-              <h2 class="publication-card_user-name">Alban Gillot</h2>
-              <div class="publication-card_user-img">
-                <img
-                  src="../assets/images/profile_picture/default/ehimetalor-akhere-unuabona-Vc8tLPRMYV8-unsplash.jpg"
-                  alt="Photo de profil de tom-ramalho"
-                />
-              </div>
-            </div>
-          </RouterLink>
-          <!--user_profil_info_end-->
-
-          <!--publication_media-->
-          <div class="publication-card_media-upload">
-            <img
-              class="publication_media"
-              src="../assets/images/toa-heftiba-FbKKtTnVOT4-unsplash.jpg"
-              alt="Photo de plusieur personnes qui boivent un verre"
-            />
-          </div>
-          <!--publication_media_end-->
-          <!--publication_text-->
-          <div class="publication-card_infos">
-            <div class="publication-card_under-media-bar">
-              <div class="publication-card_datetime">
-                <p><strong>22 janvier 2022</strong></p>
-              </div>
-              <div class="publication-card_like-comment-btn">
-                <!-- <fa class="commented publication-card_comment-btn" icon="comment" /> -->
-                <RouterLink to="/comment"><fa class="publication-card_comment-btn" :icon="['far', 'comment']" /></RouterLink>
-                <!-- <fa class="liked publication-card_like-btn" icon="heart" /> -->
-                <fa class="publication-card_like-btn" :icon="['far', 'heart']"  />
-              </div>
-            </div>
-            <div class="publication-card_text">
-              <p>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Alias nisi nam dicta impedit ab voluptas quaerat molestiae optio.
-              </p>
-            </div>
-            <div class="comment"></div>
-          </div>
-          <!--publication_text_end-->
-      </div>
-      <!--Publication_card_END-->
-<!-------------------------------------test-->
-
-
     </div>
   </main>
 <!--publication_end-->
@@ -219,3 +113,23 @@
 
   <RouterView />
 </template>
+
+
+<script>
+import axios from 'axios'
+
+const instance = axios.create({
+  baseURL: 'http://localhost:5000/api/'
+});
+
+export default {
+    name: 'home',
+    data: function (){
+        return{
+            mode:'home'
+        }
+    },
+      
+    
+    }
+</script>

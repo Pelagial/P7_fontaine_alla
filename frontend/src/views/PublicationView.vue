@@ -25,10 +25,11 @@
             <strong>Choisi un media à partager</strong>
           </label>
           <input
+            @change="onFileChange"
             class="publication_content-media"
             type="file"
             name="uploadmedia"
-            accept="image/video/*"
+            accept="image/*"
             capture
           />
         </div>
@@ -37,6 +38,7 @@
             <strong>Commentaire</strong>
           </label>
           <textarea
+            v-model="textContent"
             class="publication_content-text"
             type="text"
             rows="3"
@@ -45,7 +47,7 @@
           />
         </div>
       </div>
-      <button type="submit">partager</button>
+      <button @click.prevent="createPost()" type="submit">partager</button>
     </form>
   </div>
   <!--Publication_formular_end-->
@@ -53,5 +55,44 @@
 
 
 <script>
+import axios from 'axios'
 
+export default {
+    name: 'publication',
+    data: function (){
+        return{
+            mode:'publication',
+            uploadmedia: null,
+            textContent:''
+        }
+    },
+    methods:{
+        onFileChange(event) {
+           let file = event.target.files[0];
+           this.uploadmedia = file;
+        },
+
+        createPost(){
+          const uploadmediaData = new FormData();
+          uploadmediaData.append('uploadmedia', this.file)
+          
+          const publicationData = {
+            uploadmedia: uploadmediaData,
+            textContent: this.textContent
+          }
+          axios.post('http://localhost:5000/api/publication/post', publicationData)
+            .then(res =>{
+              console.log(res);
+          })
+
+        }
+    }
+}
 </script>
+
+   const publicationData = {
+            uploadmedia: '',
+            textContent: this.textContent
+          };
+
+          

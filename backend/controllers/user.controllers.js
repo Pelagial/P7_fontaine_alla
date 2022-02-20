@@ -60,8 +60,14 @@ module.exports.signIn = async (req, res) => {
             return res.status(401).json({ error: 'Mot de passe incorrect !' });
           }
 // Then if the password is correct creat a token
-          res.cookie ('jwt', jwt.sign({ userId: idusers },process.env.JWT_SECRET_TOKEN,{ expiresIn: '24h' }));
-          res.status(200).json({userId: idusers});
+          res.status(200).json({
+              userId: idusers,
+              token: jwt.sign(
+                { userId: idusers },
+                process.env.JWT_SECRET_TOKEN,
+                { expiresIn: '24h' }
+              )
+          });
         })
         .catch(error => res.status(500).json({ error }));
     });

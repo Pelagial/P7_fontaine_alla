@@ -109,7 +109,7 @@ export default {
             }, function (error){
                 console.log(error);
             })
-        },
+        }, 
         createAccount(){
             this.$store.dispatch('createAccount', {
                 username: this.username,
