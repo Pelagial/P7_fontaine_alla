@@ -6,12 +6,16 @@
 
 /** General import */
 const express = require('express');
+const morgan = require('morgan');
 const mysql = require('mysql');
-const helmet = require('helmet');
+const path = require('path');
 const fileUpload =  require('express-fileupload');
 
-const app = express();
+const helmet = require('helmet');
 require('dotenv').config();
+
+const app = express();
+
 
 
 /**
@@ -27,6 +31,7 @@ app.use((req, res, next) => {
 /**
  * Middlewares always executed ***********************************************************************************
  */
+app.use(morgan('tiny'));
 app.use(helmet());
 app.use(express.json());
 app.use(fileUpload({
@@ -47,16 +52,13 @@ db.connect((err) => {
 
 /** ROUTES ***********************************************/
 /** Import */
-const userRoutes = require('./routes/user.routes');
-const profileRoutes = require('./routes/profil.routes');
+const usersRoutes = require('./routes/user.routes');
 const publicationRoutes = require('./routes/publication.routes');
-const commentRoutes = require('./routes/comment.routes');
 
 /** Use */
-app.use('/api/', userRoutes);
-app.use('/api/profile', profileRoutes);
+app.use('/api/users', usersRoutes);
 app.use('/api/publication', publicationRoutes);
-app.use('/api/comment', commentRoutes);
+
 
 
 /** EXPORT ***********************************************/
