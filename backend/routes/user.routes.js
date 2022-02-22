@@ -21,9 +21,9 @@ router.get('/logout', userCtrl.logOut);
 
 /** profile routes */
 router.get('/profile', profileCtrl.getAllUserProfile);
-router.get('/profile/:id', profileCtrl.selectOneUserProfile);
-router.put('/profile/:id',profileCtrl.updateUserProfile);
-router.delete('/profile/:id', profileCtrl.deleteUserProfile);
+router.get('/profile/me', profileCtrl.selectOneUserProfile);
+router.put('/profile/me',profileCtrl.updateUserProfile);
+router.delete('/profile/me', profileCtrl.deleteUserProfile);
 
 
 /** EXPORT ***********************************************/

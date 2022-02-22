@@ -31,12 +31,20 @@ app.use((req, res, next) => {
 /**
  * Middlewares always executed ***********************************************************************************
  */
+/** Morgan config */
 app.use(morgan('tiny'));
-app.use(helmet());
-app.use(express.json());
+
+/** FileUpload config */
 app.use(fileUpload({
     limits: { fileSize: 50 * 1024 * 1024 },
   }));
+
+/** Express-Parser config */
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+/** Helmet config */
+app.use(helmet());
 
 /** DB CONNECT ***********************************************/
 const db_import = require("./config/db-config");

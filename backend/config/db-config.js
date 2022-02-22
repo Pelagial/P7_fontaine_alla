@@ -5,7 +5,7 @@ const db = mysql.createConnection({
     host     : 'localhost',
     user     : 'root',
     password : 'password',
-    database : "mydb"
+    database : "database_development_Groupomania"
   });
   
  module.exports.DB = () => {

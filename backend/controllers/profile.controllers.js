@@ -5,6 +5,11 @@
 /** IMPORT ***********************************************/
 
 /** General import */
+const jwtUtils = require('../utils/jwt.utils');
+const models = require ('../models');
+const asyncLib = require ('async');
+require("dotenv").config();
+
 const db_import = require("../config/db-config");
 const db = db_import.DB();
 
@@ -29,57 +34,97 @@ module.exports.getAllUserProfile = async (req, res) => {
 
 /** selectOneUserProfile ctrl */
 module.exports.selectOneUserProfile = async (req, res) => {
-  try {
-    const { id: idusers } = req.params;
-    const sql = `SELECT * FROM users WHERE idusers = ${idusers}`;
-    db.query(sql, (err, result) => {
-      if (err) {
-        res.status(404).json({ err });
-        throw err;
-      }
-      delete result[0].password;
-      res.status(200).json(result);
-    });
-  }
-  catch (err) {
-    res.status(400).send({ err })
-  }
-};
+  //Get auth header
+  headerAuth = req.headers['authorization'];
+  userId = jwtUtils.getUserId(headerAuth);
 
+  if (userId < 0)
+    return res.status(400).json({ 'error':'wrong token' });
+
+  models.User.findOne({
+    attributes: [ 'id', 'email', 'username', 'bio' ],
+    where: { id: userId }
+  }).then(function(user) {
+    if (user){
+      res.status(201).json(user);
+    } else {
+      res.status(500).json({ 'error':'user not found' });
+    }
+  }).catch(function(err){
+    res.status(500).json({ 'error':'connot fetch user' });
+  })
+};
+  
 /** updateUserProfile ctrl */
 module.exports.updateUserProfile = async (req, res) => {
-  try {
-    const { id: idusers } = req.params;
-    const { username, email} = req.body;
-    const sql = `UPDATE users SET username = '${username}', email = '${email}' WHERE idusers = ${idusers}`;
-    db.query(sql, (err, result) => {
-      if (err) {
-        res.status(404).json({ err });
-        throw err;
+  //Get auth header
+  headerAuth = req.headers['authorization'];
+  userId = jwtUtils.getUserId(headerAuth);
+
+  // Params
+    bio = req.body.bio;
+  
+  // Waterfall function
+  asyncLib.waterfall([
+    function(done){
+      models.User.findOne({
+        attributes:[ 'id', 'bio' ],
+        where: { id: userId }
+      })
+      .then(function(userFound){
+        done(null, userFound);
+      })
+      .catch(function(err){
+        return res.status(400).json({ 'error': 'unable to find user'});
+      })
+    },
+    function(userFound, done){
+      if (userFound){
+        userFound.update({
+          bio: (bio ? bio: userFound.bio)
+        }).then(function(){
+          done(userFound);
+        })
+        .catch(function(err){
+          return res.status(500).json({ 'error': 'cannot update user'});
+        });
+      } else {
+        return res.status(404).json({ 'error': 'user not found'});
       }
-      res.status(201).json({ message: "User updated !" });
+    }],function(userFound){
+      if(userFound){
+        return res.status(201).json(userFound);
+      } else {
+        return res.status(500).json({ 'error':'connot update user profile' });
+      }
     });
-  }
-  catch (err) {
-    res.status(400).send({ err })
-  }
 };
 
 /** deleteUserProfile ctrl */
 module.exports.deleteUserProfile = async (req, res) => {
-  try {
-    const { id: idusers } = req.params;
-    const sql = `DELETE FROM users WHERE idusers = ${idusers}`;
-    db.query(sql, (err, results) => {
-      if (err) {
-        return res.status(404).json({ err });
-      }
-      res.status(200).json("Account deleted");
-    });
-  }
-  catch (err) {
-    res.status(400).send({ err })
-  }
-};
+    //Get auth header
+    headerAuth = req.headers['authorization'];
+    userId = jwtUtils.getUserId(headerAuth);
 
+    // Waterfall function
+    asyncLib.waterfall([
+      function(done){
+        models.User.findOne({
+          where: { id: userId }
+        })
+        .then(function(userFound){
+          done(userFound);
+        })
+        .catch(function(err){
+          return res.status(500).json({ 'error': 'unable to find user'});
+        })
+      }
+    ], function(userFound){
+      if(userFound){
+        models.User.delete();
+      } else {
+        res.status(404).json({ 'error': 'user not found'});
+      }
+    })
+};
 
