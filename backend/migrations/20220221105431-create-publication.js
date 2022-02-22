@@ -16,14 +16,6 @@ module.exports = {
           key: 'id'
         }
       },
-      commentId: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-        references:{
-          model:'Comments',
-          key: 'id'
-        }
-      },
       title: {
         allowNull: false,
         type: Sequelize.STRING

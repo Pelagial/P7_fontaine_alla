@@ -11,13 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-
       models.Publication.belongsTo(models.User,{
-        foeignKey:{
-          allowNull:false
-        }
-      });
-      models.Publication.belongsTo(models.Comment,{
         foeignKey:{
           allowNull:false
         }
@@ -33,5 +27,5 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Publication',
   });
-  return Publication;
+  return Publication;s
 };

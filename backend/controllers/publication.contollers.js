@@ -5,9 +5,9 @@
 /** IMPORT ***********************************************/
 
 /** General import */
-const jwtUtils = require('../utils/jwt.utils');
 const models = require ('../models');
 const asyncLib = require ('async');
+const jwtUtils = require('../utils/jwt.utils');
 
 /** PARAMS ***********************************************/
 const TITLE_LIMIT = 2;
@@ -24,7 +24,6 @@ module.exports.creatPublication = async (req, res) => {
   // Params
     const title   = req.body.title;
     const message = req.body.message;
-    const attachment = req.body.attachment;
 
     if (title == null || message == null) {
       return res.status(400).json({ 'error': 'missing parameters' });
@@ -51,8 +50,8 @@ module.exports.creatPublication = async (req, res) => {
           models.Publication.create({
             title  : title,
             message: message,
-            attachment: attachment,
-            likes  : 0,
+            attachment: null,
+            likes  : 0 ,
             UserId : userFound.id
           })
           .then(function(newPublication) {
