@@ -42,7 +42,7 @@ module.exports.selectOneUserProfile = async (req, res) => {
     return res.status(400).json({ 'error':'wrong token' });
 
   models.User.findOne({
-    attributes: [ 'id', 'email', 'username', 'bio' ],
+    attributes: [ 'id', 'email', 'username', 'bio', 'picture' ],
     where: { id: userId }
   }).then(function(user) {
     if (user){
@@ -106,25 +106,22 @@ module.exports.deleteUserProfile = async (req, res) => {
     headerAuth = req.headers['authorization'];
     userId = jwtUtils.getUserId(headerAuth);
 
+    if (userId < 0)
+    return res.status(400).json({ 'error':'wrong token' });
+
     // Waterfall function
-    asyncLib.waterfall([
-      function(done){
-        models.User.findOne({
+    models.User.findOne({
+      where: { id: userId }
+    }).then(function(user) {
+      if (user){
+        models.User.destroy({
           where: { id: userId }
-        })
-        .then(function(userFound){
-          done(userFound);
-        })
-        .catch(function(err){
-          return res.status(500).json({ 'error': 'unable to find user'});
-        })
-      }
-    ], function(userFound){
-      if(userFound){
-        models.User.delete();
+        });
       } else {
-        res.status(404).json({ 'error': 'user not found'});
+        res.status(500).json({ 'error':'user not found' });
       }
+    }).catch(function(err){
+      res.status(500).json({ 'error':'cannot found user' });
     })
 };
 

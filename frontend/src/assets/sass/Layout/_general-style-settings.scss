@@ -34,9 +34,18 @@ button{
     margin: 2%;
     text-align: center;
 }
+label{
+    text-align: center;
+}
 
 .button--disabled{
-    display: none;
+    opacity: .2;
+}
+
+.error{
+    &_username, &_email, &_password{
+        display: none;
+    }
 }
 
 /////////////////////////////////////* responsive_design_(tablette&desktop) */

@@ -89,7 +89,7 @@
               </div>
               <div class="publication-card_like-comment-btn">
                 <!-- <fa class="commented publication-card_comment-btn" icon="comment" /> -->
-                <RouterLink to="/comment"><fa class="publication-card_comment-btn" :icon="['far', 'comment']" /></RouterLink>
+                <fa class="publication-card_comment-btn" :icon="['far', 'comment']" />
                 <!-- <fa class="liked publication-card_like-btn" icon="heart" /> -->
                 <fa class="publication-card_like-btn" :icon="['far', 'heart']"  />
               </div>
@@ -129,7 +129,11 @@ export default {
             mode:'home'
         }
     },
-      
-    
+    mounted: function(){
+      if(this.$store.state.user.userId == -1){
+        this.$router.push('/');
+      };
     }
+    
+}
 </script>

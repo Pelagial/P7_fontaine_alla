@@ -27,7 +27,8 @@ module.exports.signUp = async (req, res) => {
     email = req.body.email;
     username = req.body.username;
     password = req.body.password;
-    bio = req.body.bio;
+    bio = 'Bienvenue sur mon profil';
+    picture = '';
 
     if (email == null || username == null || password == null) {
       return res.status(400).json({ 'error': 'missing parameters' });
@@ -42,7 +43,7 @@ module.exports.signUp = async (req, res) => {
     }
 
     if (!PASSWORD_REGEX.test(password)) {
-      return res.status(400).json({ 'error': 'invalid password (lenght must be between 4 - 8 characters and include at list & number)' });
+      return res.status(400).json({ 'error': 'invalid password (lenght must be between 4 - 8 characters and include at list 1 number)' });
     }
 
     asyncLib.waterfall([
@@ -142,16 +143,4 @@ module.exports.signIn = async (req, res) => {
         return res.status(500).json({ 'error': 'cannot log on user' });
       }
     });
-};
-
-/** logOut ctrl */
-module.exports.logOut = async (req, res) => {
-  try {
-    res.cookie('jwt', '',{ maxAge: 1 });
-    res.redirect('/');
-  }
-  catch (err) {
-    res.status(500).json({ message: "Failed to disconnect" });
-    throw err
-  }
 };

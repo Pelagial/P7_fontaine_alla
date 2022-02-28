@@ -4,30 +4,24 @@
       <RouterLink to="/home">
         <fa class="profile_header-home" icon="arrow-left" />
       </RouterLink>
-      <h1 class="profile_header-user-name">Tom Ramalho</h1>
+      <h1 class="profile_header-user-name">{{ user.username }}</h1>
     </header>
     <main>
       <div class="profile_wrapper">
         <div class="profile-content">
           <div class="profile_user-img">
-            <img
-              src="../assets/images/profile_picture/default/tom-ramalho-NZaFD7tKhC8-unsplash.jpg"
-              alt="Photo de profil de tom-ramalho"
-            />
+            <img :src="user.picture" alt="Photo de profil de l'utilisateur" />
           </div>
           <div class="profile_user-infos">
             <ul>
               <li>
-                <h2>email : TomRamalho@groupomania.com</h2>
+                <h2>email : {{ user.email }}</h2>
               </li>
               <li>
-                <h2>bio</h2>
+                <h2>Bio</h2>
               </li>
               <li>
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Repellendus, ab. At nostrum magnam fugiat eaque.
-                </p>
+                <p>{{ user.bio }}</p>
               </li>
             </ul>
           </div>
@@ -65,17 +59,47 @@
             <RouterLink to="profile/update">
               <fa class="profile_user-action-update" icon="pen-to-square" />
             </RouterLink>
-            <span>
-            <RouterLink to="/">
-              <fa class="profile_user-action-logout" icon="arrow-right-to-bracket" />
-            </RouterLink>
-            </span>
-            <span>
-              <fa class="profile_user-action-delete" icon="trash-can" />
-            </span>
+            <fa class="profile_user-action-logout" icon="arrow-right-to-bracket" @click.prevent="logout()" />
+            <fa class="profile_user-action-delete" icon="trash-can" @click.prevent="deleteAccount()" />
           </div>
         </div>
       </div>
     </main>
   </div>
 </template>
+
+<script>
+import { mapState } from 'vuex'
+
+export default {
+  name: 'profile',
+  mounted: function () {
+    if (this.$store.state.user.userId == -1) {
+      this.$router.push('/');
+      return;
+    };
+    this.$store.dispatch('getUserInfos');
+  },
+  computed: {
+    ...mapState({
+      user: 'userInfos',
+    })
+  },
+  methods: {
+    logout() {
+      this.$store.commit('logout');
+      this.$router.push('/');
+    },
+    deleteAccount() {
+      const self = this;
+      this.$store.dispatch('deleteAccount')
+        .then(function () {
+          self.$store.commit('logout');
+          self.$router.push('/');
+        }, function (error) {
+          console.log(error);
+        })
+    },
+  }
+}
+</script>

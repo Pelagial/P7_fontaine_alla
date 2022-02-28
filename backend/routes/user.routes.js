@@ -15,9 +15,9 @@ const profileCtrl = require('../controllers/profile.controllers');
 /** signup */
 router.post('/signup', userCtrl.signUp);
 
-/** login,logout  */
+/** login */
 router.post('/login', userCtrl.signIn);
-router.get('/logout', userCtrl.logOut);
+
 
 /** profile routes */
 router.get('/profile', profileCtrl.getAllUserProfile);

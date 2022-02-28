@@ -22,8 +22,18 @@
                         <input v-model="email" type="email" placeholder="Enter E-mail" name="email" required>
                         <label for="password"><strong>Password</strong></label>
                         <input v-model="password" type="password" placeholder="Enter Password" name="password" required>
+                        <span class="form-row" v-if="status == 'error_create'">
+                                Erreur <br>
+                                merci d'utiliser un mail valide (exemple@nom.com)<br>
+                                un username compris entre 5 et 12 caractères<br>
+                                et un mot de passe compris entre 4 et 12 caractères<br>
+                                et contenant au moins un chiffre.
+                        </span>
                     </div>
-                    <button @click.prevent="createAccount()" :class="{'button--disabled' : !validatedFields }"><strong>SIGN UP</strong></button>
+                    <button @click.prevent="createAccount()" :class="{'button--disabled' : !validatedFields }" :disabled="!validatedFields"><strong>
+                        <p v-if="status == 'loading'">Création en cours...</p>
+                        <p v-else>SIGN UP</p>
+                    </strong></button>
                     <div class="sign-up_container-remember-me" style="background-color: #eee">
                         <div class="rememberAndCheckbox">
                             <input type="checkbox"  check="checked" name="remember">
@@ -50,8 +60,14 @@
                 <input v-model="email" type="email" placeholder="Enter Your E-mail" name="email" required>
                 <label for="password"><strong>Password</strong></label>
                 <input v-model="password" type="password" placeholder="Enter Password" name="password" required>
+                <span class="form-row" v-if="status == 'error_login'">
+                    Adresse mail et/ou mot de passe invalide
+                </span>
             </div>
-            <button @click.prevent="login()" type="submit" :class="{ 'button--disabled' : !validatedFields }"><RouterLink to="/home">LOGIN</RouterLink></button>
+            <button @click.prevent="login()" type="submit" :class="{ 'button--disabled' : !validatedFields }" :disabled="!validatedFields"><strong>
+                <p v-if="status == 'loading'">Connexion en cours...</p>
+                <p v-else>LOGIN</p>
+            </strong></button>
             <div class="sign-up_container-remember-me" style="background-color: #eee">
                 <div class="rememberAndCheckbox">
                     <input type="checkbox"  check="checked" name="remember">
@@ -66,6 +82,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
     name: 'signup',
     data: function (){
@@ -75,6 +93,12 @@ export default {
             email:'',
             password:'',
         }
+    },
+    mounted: function(){
+    if(this.$store.state.user.userId != -1){
+      this.$router.push('/home');
+      return;
+    }
     },
     computed: {
         validatedFields(){
@@ -91,7 +115,8 @@ export default {
                         return false;
                     }
             }
-        }  
+        },
+        ...mapState(['status'])
     },
     methods:{
         switchToSignUp(){
@@ -101,47 +126,29 @@ export default {
             this.mode ='login';
         },
         login(){
+            const self = this;
             this.$store.dispatch('login', {
                 email: this.email,
                 password: this.password
-            }).then(function(response){
-            console.log(response);
+            }).then(function(){
+                self.$router.push('home');
             }, function (error){
                 console.log(error);
             })
         }, 
         createAccount(){
+            const self = this;
             this.$store.dispatch('createAccount', {
                 username: this.username,
                 email: this.email,
                 password: this.password
-            }).then(function(response){
-            console.log(response);
+            })
+            .then(function(){
+                self.login();
             }, function (error){
                 console.log(error);
             })
         },
-        validUsername(){
-            if (/^[a-z\d]+$/i.test(this.username) != true){
-                console.log('username invalid');
-            } else {
-                console.log('username valid');
-            }
-        },
-        validEmail(){
-            if (/^[a-zA-Z]{5,30}@[a-z\._-]{5,20}$/.test(this.username) != true){
-                console.log('email invalid');
-            } else {
-                console.log('email valid');
-            }
-        },
-        validPassword(){
-            if (/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2, 3}$/.test(this.password) != true){
-                console.log('password invalid');
-            } else {
-                console.log('password valid');
-            }
-        }
     }
 }
 </script>
