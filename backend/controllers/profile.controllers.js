@@ -11,6 +11,7 @@ const asyncLib = require ('async');
 require("dotenv").config();
 
 const db_import = require("../config/db-config");
+const { userInfo } = require('os');
 const db = db_import.DB();
 
 /** EXPORT ***********************************************/
@@ -62,13 +63,16 @@ module.exports.updateUserProfile = async (req, res) => {
   userId = jwtUtils.getUserId(headerAuth);
 
   // Params
-    bio = req.body.bio;
+  username = req.body.username;
+  bio = req.body.bio;
+
+    
   
   // Waterfall function
   asyncLib.waterfall([
     function(done){
       models.User.findOne({
-        attributes:[ 'id', 'bio' ],
+        attributes:[ 'id', 'bio', 'picture', 'username','isAdmin' ],
         where: { id: userId }
       })
       .then(function(userFound){
@@ -81,6 +85,7 @@ module.exports.updateUserProfile = async (req, res) => {
     function(userFound, done){
       if (userFound){
         userFound.update({
+          username: (username ? username: userFound.username),
           bio: (bio ? bio: userFound.bio)
         }).then(function(){
           done(userFound);

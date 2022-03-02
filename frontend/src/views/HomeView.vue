@@ -23,8 +23,7 @@
         <div class="nav-bar-header_user-profile">
           <img
             class="user_img"
-            src="../assets/images/profile_picture/default/tom-ramalho-NZaFD7tKhC8-unsplash.jpg"
-            alt="Photo de profil de tom-ramalho"
+            :src="user.picture" alt="Photo de profil de l'utilisateur"
           />
         </div>
       </RouterLink>
@@ -43,9 +42,8 @@
     <RouterLink to="/profile">
       <div class="nav-bar_user-profile">
         <img
-          class="user_img"
-          src="../assets/images/profile_picture/default/tom-ramalho-NZaFD7tKhC8-unsplash.jpg"
-          alt="Photo de profil de tom-ramalho"
+            class="user_img"
+            :src="user.picture" alt="Photo de profil de l'utilisateur"
         />
       </div>
     </RouterLink>
@@ -56,16 +54,15 @@
   <main>
     <div class="publications_wrapper">
       <!--Publication_card-->
-      <div class="publication-card">
-        
+      <div class="publication-card" v-for="publication of publications" :key="publication.id" :id="publication.id">
+
           <!--user_profil_info-->
           <RouterLink to="/profile">
             <div class="publication-card_user-profile">
-              <h2 class="publication-card_user-name">Tom Ramalho</h2>
+              <h2 class="publication-card_user-name">{{ publication.User.username }}</h2>
               <div class="publication-card_user-img">
                 <img
-                  src="../assets/images/profile_picture/default/tom-ramalho-NZaFD7tKhC8-unsplash.jpg"
-                  alt="Photo de profil de tom-ramalho"
+                  :src="publication.User.picture" alt="Photo de profil de l'utilisateur"
                 />
               </div>
             </div>
@@ -85,20 +82,20 @@
           <div class="publication-card_infos">
             <div class="publication-card_under-media-bar">
               <div class="publication-card_datetime">
-                <p><strong>17 février 2022</strong></p>
+                <p><strong>Publié le {{ publication.createdAt }}</strong></p>
               </div>
-              <div class="publication-card_like-comment-btn">
-                <!-- <fa class="commented publication-card_comment-btn" icon="comment" /> -->
-                <fa class="publication-card_comment-btn" :icon="['far', 'comment']" />
+              <div class="publication-card_btn">
+                <fa class="publication-card_delete-btn" icon="trash-can" @click.prevent="getPublicationId" />
                 <!-- <fa class="liked publication-card_like-btn" icon="heart" /> -->
                 <fa class="publication-card_like-btn" :icon="['far', 'heart']"  />
               </div>
             </div>
             <div class="publication-card_text">
+              <h2>
+                {{ publication.title }}
+              </h2>
               <p>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Alias nisi nam dicta impedit ab voluptas quaerat! Libero aperiam, voluptatum ut aut quis blanditiis cumque,
-                explicabo ex consequatur numquam molestiae optio.
+                {{ publication.message }}
               </p>
             </div>
             <div class="comment"></div>
@@ -116,24 +113,30 @@
 
 
 <script>
-import axios from 'axios'
-
-const instance = axios.create({
-  baseURL: 'http://localhost:5000/api/'
-});
+import { mapState } from 'vuex'
 
 export default {
-    name: 'home',
-    data: function (){
-        return{
-            mode:'home'
-        }
-    },
-    mounted: function(){
-      if(this.$store.state.user.userId == -1){
-        this.$router.push('/');
+  name: 'home',
+  beforeMount(){
+      if (this.$store.state.user.userId == -1) {
+      this.$router.push('/');
+      return;
       };
-    }
-    
+  },
+  mounted: function () {
+    this.$store.dispatch('getUserInfos');
+    this.$store.dispatch('getAllPublication');
+  },
+  computed: {
+    ...mapState({
+      user: 'userInfos',
+      publications: 'publications'
+    })
+  },
+  methods: {
+    getPublicationId() {
+      console.log(publication.id);
+    },
+  }
 }
 </script>

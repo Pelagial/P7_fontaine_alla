@@ -3,10 +3,10 @@ import { createStore } from 'vuex'
 import axios from 'axios'
 
 const instance = axios.create({
-  baseURL: 'http://localhost:5000/api/users'
+  baseURL: 'http://localhost:5000/api/'
 });
 
-//
+// Get user auth token from localstorage
 let user = localStorage.getItem('user');
 if (!user) {
  user = {
@@ -25,7 +25,7 @@ if (!user) {
   }
 }
 
-// Create a new store instance.
+// Create a new store instance
 const store = createStore({
   state: {
     status:'',
@@ -35,8 +35,13 @@ const store = createStore({
       username: '',
       bio: '',
       picture: '',
-    }
-
+    },
+    publication:{
+      attachement: null,
+      title:'',
+      message:''
+    },
+    publications:[]
   },
   mutations: {
     setStatus (state, status){
@@ -56,13 +61,23 @@ const store = createStore({
         token: '',
       }
       localStorage.removeItem('user');
+    },
+    publication: function(state, publication) {
+      state.publication = publication;
+    },
+    publications: function(state, publications) {
+      state.publications = publications;
+    },
+    publicationId: function(state, publicationId){
+      state.publication.id = publicationId;
     }
+
   },
   actions: {
     login: ({commit}, userInfos) =>{
       commit('setStatus', 'loading');
       return new Promise((resolve, reject) =>{
-        instance.post('/login', userInfos)
+        instance.post('/users/login', userInfos)
         .then(function(response){
           commit('setStatus', '');
           commit('logUser', response.data);
@@ -77,7 +92,7 @@ const store = createStore({
     createAccount: ({commit}, userInfos) =>{
       return new Promise((resolve, reject) =>{
         commit('setStatus', 'loading');
-        instance.post('/signup', userInfos)
+        instance.post('/users/signup', userInfos)
         .then(function(response){
           commit('setStatus', 'created');
           resolve(response);
@@ -89,7 +104,7 @@ const store = createStore({
       })
     },
     getUserInfos: ({commit}) =>{
-      instance.get('/profile/me')
+      instance.get('/users/profile/me')
         .then(function(response){
           commit('userInfos', response.data);
         })
@@ -98,7 +113,7 @@ const store = createStore({
     },
     updateAccount: ({commit}, userInfos) =>{
       return new Promise((resolve, reject) =>{
-        instance.put('/profile/me', userInfos)
+        instance.put('/users/profile/me', userInfos)
         .then(function(response){
           commit();
           resolve(response);
@@ -109,7 +124,7 @@ const store = createStore({
       })
     },
     deleteAccount: ({commit}) =>{
-      instance.delete('/profile/me')
+      instance.delete('/users/profile/me')
         .then(function(response){
           state.user = {
             userId: -1,
@@ -121,6 +136,52 @@ const store = createStore({
         .catch(function(error){
           commit(error);
         })
+    },
+    createPost: ({commit}, publication) =>{
+      return new Promise((resolve, reject) =>{
+        instance.post('/publication/post', publication)
+        .then(function(response){
+          commit('setStatus', '');
+          resolve(response);
+        })
+        .catch(function(error){
+          commit('setStatus', 'error_posting');
+          reject(error);
+        })
+      })
+    },
+    getAllPublication: ({commit}) =>{
+      instance.get('/publication/')
+        .then(function(response){
+          commit('publications', response.data);
+        })
+        .catch(function(){
+        })
+    },
+    getOnePublication: ({commit}) =>{
+      let id = this.state.publication.id;
+      instance.get(`/publication/${id}`)
+        .then(function(response){
+          commit('publications', response.data);
+        })
+        .catch(function(){
+        })
+    },
+    deletePost: ({commit}) =>{
+      let id = this.state.publication.id
+      instance.get(`/publication/${id}`)
+      if (publication != ""){
+        instance.delete(`/publication/${id}`)
+        .then(function(response){
+          commit(response);
+        })
+        .catch(function(error){
+          commit(error);
+        })
+      } else {
+        
+      }
+      
     },
   }
 })

@@ -11,9 +11,6 @@ const models = require ('../models');
 const asyncLib = require ('async');
 require("dotenv").config();
 
-const db_import = require('../config/db-config');
-const db = db_import.DB();
-
 /** PARAMS ***********************************************/
 const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const PASSWORD_REGEX = /^(?=.*\d).{4,8}$/;
@@ -28,14 +25,13 @@ module.exports.signUp = async (req, res) => {
     username = req.body.username;
     password = req.body.password;
     bio = 'Bienvenue sur mon profil';
-    picture = '';
 
     if (email == null || username == null || password == null) {
       return res.status(400).json({ 'error': 'missing parameters' });
     }
 
-    if (username.length >= 13 || username.length <= 4) {
-      return res.status(400).json({ 'error': 'wrong username (lenght must be between 5 - 12 characters)' });
+    if (username.length >= 20 || username.length <= 4) {
+      return res.status(400).json({ 'error': 'wrong username (lenght must be between 5 - 19 characters)' });
     }
 
     if (!EMAIL_REGEX.test(email)) {
@@ -69,7 +65,7 @@ module.exports.signUp = async (req, res) => {
         }
       },
       function(userFound, bcryptedPassword, done) {
-        var newUser = models.User.create({
+        newUser = models.User.create({
           email: email,
           username: username,
           password: bcryptedPassword,
@@ -85,8 +81,8 @@ module.exports.signUp = async (req, res) => {
       }
     ], function(newUser) {
       if (newUser) {
-        return res.status(201).json({
-          'userId': newUser.id
+        return res.status(201).send({
+            message: `Votre compte est bien créé ${newUser.username} !`
         });
       } else {
         return res.status(500).json({ 'error': 'cannot add user' });

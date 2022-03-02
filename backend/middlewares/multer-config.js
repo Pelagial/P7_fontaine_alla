@@ -6,20 +6,37 @@
 
 /** General import */
 const multer = require('multer');
-const path = require('path');
 
-/** Import images files from user to DDB */
+
+/** PARAMS ***********************************************/
+
+/** Mime types def */
+const MIME_TYPES = {
+  "image/jpg": "jpg",
+  "image/jpeg": "jpg",
+  "image/png": "png",
+  "image.gif": "gif",
+  "image.webp": "webp",
+};
+
+/** EXPORT ***********************************************/
+
+/** Export images files from user to DDB */
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    if (file.fieldname === "attachement") cb (null, "./images/posts/");
-    else if (file.fieldname === "picture") cb (null, "./images/profils/");
+  destination: (req, file, callback) => {
+    // destination des images
+    callback(null, "./upload");
   },
   filename: (req, file, callback) => {
-    callback(null, Date.now() + path.extname(file.originalname));
+    // nouveau nom du fichier image pour éviter les doublons
+    const name = file.originalname.replace(/\.[^/.]+$/, "");
+    const extension = MIME_TYPES[file.mimetype];
+    callback(null, name + Date.now() + "." + extension);
   },
 });
 
-/** EXPORT ***********************************************/
-const upload = multer({storage: storage});
+module.exports = multer({ 
+  storage: storage, 
+  limits: {fileSize : '1000000'}
+}).single("image");
 
-module.exports = upload

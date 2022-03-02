@@ -22,10 +22,10 @@
                         <input v-model="email" type="email" placeholder="Enter E-mail" name="email" required>
                         <label for="password"><strong>Password</strong></label>
                         <input v-model="password" type="password" placeholder="Enter Password" name="password" required>
-                        <span class="form-row" v-if="status == 'error_create'">
+                        <span v-if="status == 'error_create'">
                                 Erreur <br>
                                 merci d'utiliser un mail valide (exemple@nom.com)<br>
-                                un username compris entre 5 et 12 caractères<br>
+                                un username compris entre 5 et 19 caractères<br>
                                 et un mot de passe compris entre 4 et 12 caractères<br>
                                 et contenant au moins un chiffre.
                         </span>
@@ -60,7 +60,7 @@
                 <input v-model="email" type="email" placeholder="Enter Your E-mail" name="email" required>
                 <label for="password"><strong>Password</strong></label>
                 <input v-model="password" type="password" placeholder="Enter Password" name="password" required>
-                <span class="form-row" v-if="status == 'error_login'">
+                <span v-if="status == 'error_login'">
                     Adresse mail et/ou mot de passe invalide
                 </span>
             </div>

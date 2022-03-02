@@ -5,10 +5,10 @@
       <fa class="publication-home" icon="arrow-left" />
     </RouterLink>
     <div class="publication-header_user-profile">
-              <h1 class="publication-header_user-name">Tom Ramalho</h1>
+              <h1 class="publication-header_user-name">{{ user.username }}</h1>
               <div class="publication-header_user-img">
                 <img
-                  src="../assets/images/profile_picture/default/tom-ramalho-NZaFD7tKhC8-unsplash.jpg"
+                  :src="user.picture"
                   alt="Photo de profil de tom-ramalho"
                 />
               </div>
@@ -18,81 +18,107 @@
 
   <!--Publication_formular-->
   <div class="publication_formular">
-    <form class="publication">
+    <form class="publication" enctype="multipart/form-data">
       <div class="publication_content">
         <div class="publication_content-media-upload">
-          <label for="uploadmedia">
+          <label for="attachement">
             <strong>Choisi un media à partager</strong>
           </label>
           <input
-            @change="onFileChange"
+            @change="uploadImage"
             class="publication_content-media"
             type="file"
-            name="uploadmedia"
-            accept="image/*"
-            capture
+            accept="image/png, image/jpeg,
+            image/bmp, image/gif"
+            ref="file"
+            name="attachement"
           />
         </div>
         <div class="publication_content-text-content">
-          <label for="textContent">
+          <label for="title">
+            <strong>Titre</strong>
+          </label>
+          <input v-model="title" type="text" placeholder="Entrer votre titre" name="title">
+          <label for="message">
             <strong>Commentaire</strong>
           </label>
           <textarea
-            v-model="textContent"
+            v-model="message"
             class="publication_content-text"
             type="text"
             rows="3"
-            placeholder="Enter votre commentaire"
-            name="textContent"
+            placeholder="Entrer votre commentaire"
+            name="message"
           />
         </div>
+        <span v-if="status == 'error_posting'">
+                    Titre ou message trop cours<br>
+                    (Le titre doit avoir minimum 3 caractères<br>
+                    et le message doit en contenir minimum 5.)
+        </span>
       </div>
-      <button @click.prevent="createPost()" type="submit">partager</button>
+      <button @click.prevent="createPost()" type="submit" :class="{ 'button--disabled' : !validatedFields }" :disabled="!validatedFields">partager</button>
     </form>
   </div>
   <!--Publication_formular_end-->
 </template>
 
-
 <script>
-import axios from 'axios'
+import { mapState } from 'vuex'
 
 export default {
-    name: 'publication',
-    data: function (){
+  name: 'publication',
+  data: function (){
         return{
             mode:'publication',
-            uploadmedia: null,
-            textContent:''
+            attachement:'',
+            title:'',
+            message:''
         }
+  },
+  mounted: function () {
+    if (this.$store.state.user.userId == -1) {
+      this.$router.push('/');
+      return;
+    };
+    this.$store.dispatch('getUserInfos');
+  },
+  computed: {
+    validatedFields(){
+            if (this.mode =='publication') {
+                if(this.title != "" && this.message != "") {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
     },
-    methods:{
-        onFileChange(event) {
-           let file = event.target.files[0];
-           this.uploadmedia = file;
+    ...mapState({
+      status: 'status',
+      user: 'userInfos'
+    })
+  },
+  methods: {
+    uploadImage() {
+      const file = this.$refs.file.files[0];
+      this.file = file;
+    },
+    createPost(){
+            const self = this;
+            this.$store.dispatch('createPost', {
+                attachement: this.file,
+                title: this.title,
+                message: this.message
+            })
+            .then(function () {
+                self.$router.push('home'); 
+            },
+            function (error) {
+                console.log(error);
+            });   
         },
-
-        createPost(){
-          const uploadmediaData = new FormData();
-          uploadmediaData.append('uploadmedia', this.file)
-          
-          const publicationData = {
-            uploadmedia: uploadmediaData,
-            textContent: this.textContent
-          }
-          axios.post('http://localhost:5000/api/publication/post', publicationData)
-            .then(res =>{
-              console.log(res);
-          })
-
-        }
-    }
+  }
 }
 </script>
-
-   const publicationData = {
-            uploadmedia: '',
-            textContent: this.textContent
-          };
 
           

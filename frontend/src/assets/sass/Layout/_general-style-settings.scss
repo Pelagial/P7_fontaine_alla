@@ -41,7 +41,9 @@ label{
 .button--disabled{
     opacity: .2;
 }
-
+.icon--disabled{
+    display: none;
+}
 .error{
     &_username, &_email, &_password{
         display: none;

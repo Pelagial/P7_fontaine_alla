@@ -38,18 +38,22 @@
     padding: 0 5% 0 5% ; 
     width: 100%;
   }
-  &_like-comment-btn{
+  &_btn{
     display: flex;
     justify-content: flex-end;
     align-items: center;
     width: 100%;
     height: auto;
   }
-  &_like-btn, &_comment-btn{
+  &_like-btn, &_delete-btn{
     color: $complementary-secondary-color;
     width: 25px;
     height: 25px;
     padding: 5% 10% 5% 10%;
+    &:hover{
+      cursor: pointer;
+      color: $color-secondary;
+  }
   }
   &_text{
       padding: 5%;
