@@ -37,11 +37,17 @@ const store = createStore({
       picture: '',
     },
     publication:{
-      attachement: null,
+      attachement: '',
       title:'',
       message:''
     },
-    publications:[]
+    publications:[],
+    userPublication:{
+      attachement: '',
+      title:'',
+      message:''
+    },
+    userPublications:[],
   },
   mutations: {
     setStatus (state, status){
@@ -67,6 +73,12 @@ const store = createStore({
     },
     publications: function(state, publications) {
       state.publications = publications;
+    },
+    userPublication: function(state, userPublication) {
+      state.userPublication = userPublication;
+    },
+    userPublications: function(state, userPublications) {
+      state.userPublications = userPublications;
     },
     publicationId: function(state, publicationId){
       state.publication.id = publicationId;
@@ -111,9 +123,9 @@ const store = createStore({
         .catch(function(){
         })
     },
-    updateAccount: ({commit}, userInfos) =>{
+    updateAccount: ({commit}, data) =>{
       return new Promise((resolve, reject) =>{
-        instance.put('/users/profile/me', userInfos)
+        instance.put('/users/profile/me', data)
         .then(function(response){
           commit();
           resolve(response);
@@ -154,6 +166,14 @@ const store = createStore({
       instance.get('/publication/')
         .then(function(response){
           commit('publications', response.data);
+        })
+        .catch(function(){
+        })
+    },
+    getUserPublication: ({commit}) =>{
+      instance.get('/publication/myPub')
+        .then(function(response){
+          commit('userPublications', response.data);
         })
         .catch(function(){
         })

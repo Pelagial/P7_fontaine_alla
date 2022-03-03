@@ -6,11 +6,12 @@
       </RouterLink>
       <h1 class="profile_header-user-name">{{ user.username }}</h1>
     </header>
-    <main>
+    <main v-if="mode == 'profile'">
       <div class="profile_wrapper">
         <div class="profile-content">
           <div class="profile_user-img">
-            <img :src="user.picture" alt="Photo de profil de l'utilisateur" />
+            <img v-if="user.picture" :src="user.picture" alt="Photo de profil de l'utilisateur" />
+            <fa v-else="user.picture === null" class="default_userIcon" icon="circle-user"></fa>          
           </div>
           <div class="profile_user-infos">
             <ul>
@@ -25,59 +26,51 @@
               </li>
             </ul>
           </div>
-          <div class="profile_user-publications">
-            <div class="profile_user-publication_1">
-              <img
-                class="publication_media"
-                src="../assets/images/fabio-alves-IQCwKOpIQro-unsplash.jpg"
-                alt="Photo de plusieur personnes qui boivent un verre"
-              />
-            </div>
-            <div class="profile_user-publication_2">
-              <img
-                class="publication_media"
-                src="../assets/images/fabio-alves-IQCwKOpIQro-unsplash.jpg"
-                alt="Photo de plusieur personnes qui boivent un verre"
-              />
-            </div>
-            <div class="profile_user-publication_3">
-              <img
-                class="publication_media"
-                src="../assets/images/fabio-alves-IQCwKOpIQro-unsplash.jpg"
-                alt="Photo de plusieur personnes qui boivent un verre"
-              />
-            </div>
-            <div class="profile_user-publication_4">
-              <img
-                class="publication_media"
-                src="../assets/images/fabio-alves-IQCwKOpIQro-unsplash.jpg"
-                alt="Photo de plusieur personnes qui boivent un verre"
-              />
-            </div>
-          </div>
+          
           <div class="profile_user-action">
-            <RouterLink to="profile/update">
-              <fa class="profile_user-action-update" icon="pen-to-square" />
-            </RouterLink>
+            <fa @click.prevent="update()" class="profile_user-action-update" icon="pen-to-square" />
             <fa class="profile_user-action-logout" icon="arrow-right-to-bracket" @click.prevent="logout()" />
             <fa class="profile_user-action-delete" icon="trash-can" @click.prevent="deleteAccount()" />
           </div>
+
+          <div class="profile_user-publications">
+          <h2>Mes publications</h2>
+              <userPublicationsCard/>
+          </div>
+          
         </div>
       </div>
+    </main>
+    <main v-else="mode == 'updateProfile'">
+      <updateProfile/>
     </main>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import updateProfile from '../components/updateProfile.vue'
+import userPublicationsCard from '../components/userPublicationsCard.vue'
 
 export default {
   name: 'profile',
-  mounted: function () {
-    if (this.$store.state.user.userId == -1) {
+  data: function (){
+        return{
+            mode:'profile',
+        }
+  },
+  components: {
+        updateProfile,
+        userPublicationsCard
+  },
+  beforeMount(){
+      if (this.$store.state.user.userId == -1) {
       this.$router.push('/');
+      localStorage.removeItem('user');
       return;
-    };
+      };
+  },
+  mounted: function () {
     this.$store.dispatch('getUserInfos');
   },
   computed: {
@@ -86,6 +79,9 @@ export default {
     })
   },
   methods: {
+    update() {
+      this.mode='updateProfile';
+    },
     logout() {
       this.$store.commit('logout');
       this.$router.push('/');

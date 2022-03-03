@@ -7,10 +7,8 @@
     <div class="publication-header_user-profile">
               <h1 class="publication-header_user-name">{{ user.username }}</h1>
               <div class="publication-header_user-img">
-                <img
-                  :src="user.picture"
-                  alt="Photo de profil de tom-ramalho"
-                />
+                <img v-if="user.picture" class="user_img" :src="user.picture" alt="Photo de profil de l'utilisateur" />
+                <fa v-else="user.picture === null" class="default_userIcon" icon="circle-user"></fa>
               </div>
             </div>
   </header>

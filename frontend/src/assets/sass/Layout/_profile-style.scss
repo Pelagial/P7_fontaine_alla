@@ -34,6 +34,9 @@
         margin-top: 2%;
     }
     &_user-img{
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
         border: solid 2px $complementary-secondary-color ;
         width: 100px;
         height: 100px;
@@ -44,7 +47,7 @@
     &_user-publications{
         width: 100%;
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: 1fr;
         margin-top: 5%;
         margin-bottom: 5%;
     }

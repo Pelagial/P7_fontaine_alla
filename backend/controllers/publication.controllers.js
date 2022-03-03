@@ -127,9 +127,34 @@ module.exports.getOnePublication = async (req, res) => {
   }
 };
 
-/** updatePublication ctrl */
-module.exports.updatePublication = async (req, res) => {
-
+/** getAllPublicationFromOneUser ctrl */
+module.exports.getAllPublicationFromOneUser = async (req, res) => {
+  const headerAuth = req.headers['authorization'];
+  const userId = jwtUtils.getUserId(headerAuth);
+  
+  // Params
+  order = req.query.order;
+  try{
+    models.Publication.findAll({
+      where: { UserId: userId },
+      order: [(order != null) ? order.split(':') : ['createdAt', 'DESC']],
+      include: [{
+        model: models.User,
+        attributes: [ 'username','picture' ]
+      }]
+    }).then(function(publication) {
+      if (publication) {
+        res.status(200).send(publication);
+      } else {
+        res.status(404).json({ "error": "no publication found" });
+      }
+    }).catch(function(err) {
+      console.log(err);
+      res.status(500).json({ "error": "invalid fields" });
+    });
+  } catch (error) {
+    return res.status(500).send({ error: "Erreur serveur" });
+  }
 };
 
 /** deletePublication ctrl */

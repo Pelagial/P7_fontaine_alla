@@ -14,9 +14,10 @@ const multer = require('../middlewares/multer-config');
 /** import requires routes js files */
 router.post('/post', multer, publicationCtrl.creatPublication);
 router.get('/', publicationCtrl.getAllPublication);
-router.get('/:id', publicationCtrl.getOnePublication);
-router.put('/:id', multer, publicationCtrl.updatePublication);
+router.get('/myPub', publicationCtrl.getAllPublicationFromOneUser);
 router.delete('/:id', publicationCtrl.deletePublication);
+router.get('/:id', publicationCtrl.getOnePublication);
+
 
 // Like Dislike
 router.post('/:id/like', publicationCtrl.like);

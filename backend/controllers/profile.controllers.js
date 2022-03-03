@@ -11,7 +11,6 @@ const asyncLib = require ('async');
 require("dotenv").config();
 
 const db_import = require("../config/db-config");
-const { userInfo } = require('os');
 const db = db_import.DB();
 
 /** EXPORT ***********************************************/
@@ -29,7 +28,7 @@ module.exports.getAllUserProfile = async (req, res) => {
     });
   }
   catch (err) {
-    res.status(400).send({ err })
+    return res.status(500).send({ error: "Erreur serveur" });
   }
 };
 
@@ -41,68 +40,75 @@ module.exports.selectOneUserProfile = async (req, res) => {
 
   if (userId < 0)
     return res.status(400).json({ 'error':'wrong token' });
-
-  models.User.findOne({
-    attributes: [ 'id', 'email', 'username', 'bio', 'picture' ],
-    where: { id: userId }
-  }).then(function(user) {
-    if (user){
-      res.status(201).json(user);
-    } else {
-      res.status(500).json({ 'error':'user not found' });
-    }
-  }).catch(function(err){
-    res.status(500).json({ 'error':'connot fetch user' });
-  })
+  
+  try{
+    models.User.findOne({
+      attributes: [ 'id', 'email', 'username', 'bio', 'picture' ],
+      where: { id: userId }
+    }).then(function(user) {
+      if (user){
+        res.status(201).json(user);
+      } else {
+        res.status(500).json({ 'error':'user not found' });
+      }
+    }).catch(function(err){
+      res.status(500).json({ 'error':'connot fetch user' });
+    })
+  } catch {
+    return res.status(500).send({ error: "Erreur serveur" });
+  }
+  
 };
   
 /** updateUserProfile ctrl */
 module.exports.updateUserProfile = async (req, res) => {
   //Get auth header
   headerAuth = req.headers['authorization'];
-  userId = jwtUtils.getUserId(headerAuth);
 
-  // Params
-  username = req.body.username;
-  bio = req.body.bio;
-
-    
-  
-  // Waterfall function
-  asyncLib.waterfall([
-    function(done){
-      models.User.findOne({
-        attributes:[ 'id', 'bio', 'picture', 'username','isAdmin' ],
-        where: { id: userId }
-      })
-      .then(function(userFound){
-        done(null, userFound);
-      })
-      .catch(function(err){
-        return res.status(400).json({ 'error': 'unable to find user'});
-      })
-    },
-    function(userFound, done){
-      if (userFound){
-        userFound.update({
-          username: (username ? username: userFound.username),
-          bio: (bio ? bio: userFound.bio)
-        }).then(function(){
-          done(userFound);
-        })
-        .catch(function(err){
-          return res.status(500).json({ 'error': 'cannot update user'});
+  try {
+    const userId = jwtUtils.getUserId(headerAuth);
+    let newPicture;
+    let user = await models.User.findOne({ where: { id: id } }); // we found the user
+    if (userId === user.id) {
+      if (req.file && user.photo) {
+        newPicture = `${req.protocol}://${req.get("host")}/api/upload/${
+          req.file.filename
+        }`;
+        const filename = user.picture.split("/upload")[1];
+        fs.unlink(`upload/${filename}`, (err) => {
+          // if there is already a picture we delete it
+          if (err) console.log(err);
+          else {
+            console.log(`Deleted file: upload/${filename}`);
+          }
         });
-      } else {
-        return res.status(404).json({ 'error': 'user not found'});
+      } else if (req.file) {
+        newPicture = `${req.protocol}://${req.get("host")}/api/upload/${
+          req.file.filename
+        }`;
       }
-    }],function(userFound){
-      if(userFound){
-        return res.status(201).json(userFound);
-      } else {
-        return res.status(500).json({ 'error':'connot update user profile' });
+      if (newPicture) {
+        user.picture = newPicture;
       }
-    });
+      if (req.body.bio) {
+        user.bio = req.body.bio;
+      }
+      if (req.body.username) {
+        user.username = req.body.username;
+      }
+      const newUser = await user.save({ fields: ["username", "bio", "picture"] }); // we save change in ddb
+      res.status(200).json({
+        user: newUser,
+        message: "Votre profil a bien été modifié",
+      });
+    } else {
+      res
+        .status(400)
+        .json({ message: "Vous n'avez pas les droits requis" });
+    }
+  } catch (error) {
+    return res.status(500).send({ error: "Erreur serveur" });
+  }
 };
 
 /** deleteUserProfile ctrl */
@@ -111,22 +117,28 @@ module.exports.deleteUserProfile = async (req, res) => {
     headerAuth = req.headers['authorization'];
     userId = jwtUtils.getUserId(headerAuth);
 
-    if (userId < 0)
-    return res.status(400).json({ 'error':'wrong token' });
+    if (userId < 0){
+      return res.status(400).json({ 'error':'wrong token' });
+    }
 
-    // Waterfall function
-    models.User.findOne({
-      where: { id: userId }
-    }).then(function(user) {
-      if (user){
-        models.User.destroy({
-          where: { id: userId }
-        });
-      } else {
-        res.status(500).json({ 'error':'user not found' });
-      }
-    }).catch(function(err){
-      res.status(500).json({ 'error':'cannot found user' });
-    })
+    try{
+      // Waterfall function
+      models.User.findOne({
+        where: { id: userId }
+      }).then(function(user) {
+        if (user){
+          models.User.destroy(
+            { where: { id: userId }}, 
+            { truncate: true }
+          );
+        } else {
+          res.status(500).json({ 'error':'user not found' });
+        }
+      }).catch(function(err){
+        res.status(500).json({ 'error':'cannot found user' });
+      })
+  } catch (error) {
+    return res.status(500).send({ error: "Erreur serveur" });
+  }
 };
 

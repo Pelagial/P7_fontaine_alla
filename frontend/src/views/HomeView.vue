@@ -21,10 +21,8 @@
       </RouterLink>
       <RouterLink to="/profile">
         <div class="nav-bar-header_user-profile">
-          <img
-            class="user_img"
-            :src="user.picture" alt="Photo de profil de l'utilisateur"
-          />
+          <img v-if="user.picture" class="user_img" :src="user.picture" alt="Photo de profil de l'utilisateur" />
+          <fa v-else="user.picture === null" class="default_userIcon" icon="circle-user"></fa>
         </div>
       </RouterLink>
       </div>
@@ -41,10 +39,8 @@
     </RouterLink>
     <RouterLink to="/profile">
       <div class="nav-bar_user-profile">
-        <img
-            class="user_img"
-            :src="user.picture" alt="Photo de profil de l'utilisateur"
-        />
+        <img v-if="user.picture" class="user_img" :src="user.picture" alt="Photo de profil de l'utilisateur" />
+        <fa v-else="user.picture === null" class="default_userIcon" icon="circle-user"></fa>
       </div>
     </RouterLink>
   </nav>
@@ -61,9 +57,8 @@
             <div class="publication-card_user-profile">
               <h2 class="publication-card_user-name">{{ publication.User.username }}</h2>
               <div class="publication-card_user-img">
-                <img
-                  :src="publication.User.picture" alt="Photo de profil de l'utilisateur"
-                />
+                <img v-if="publication.User.picture" :src="publication.User.picture" alt="Photo de profil de l'utilisateur"/>
+                <fa v-else="user.picture === null" class="default_userIcon" icon="circle-user"></fa>
               </div>
             </div>
           </RouterLink>
@@ -120,6 +115,7 @@ export default {
   beforeMount(){
       if (this.$store.state.user.userId == -1) {
       this.$router.push('/');
+      localStorage.removeItem('user');
       return;
       };
   },
@@ -134,9 +130,6 @@ export default {
     })
   },
   methods: {
-    getPublicationId() {
-      console.log(publication.id);
-    },
   }
 }
 </script>

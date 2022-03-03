@@ -10,7 +10,14 @@
                         <label for="pictures">
                             <strong>Image de profile</strong>
                         </label>
-                        <input type="file" @change="getFile" ref="picture" />
+                        <input 
+                        @change="uploadImage"
+                        type="file"
+                        accept="image/png, image/jpeg,
+                        image/bmp, image/gif"
+                        ref="picture"
+                        name="picture"
+                        />
                     </div>
                     <div class="profile_update-container">
                         <label for="username">
@@ -64,6 +71,7 @@ export default {
     mounted: function () {
         if (this.$store.state.user.userId == -1) {
             this.$router.push('/');
+            localStorage.removeItem('user');
             return;
         };
         this.$store.dispatch('getUserInfos');
@@ -87,29 +95,39 @@ export default {
             if (picture) {
                 reader.readAsDataURL(picture);
             }
+            return picture;
         },
-        getFile(){
-            const file = document.querySelector('input[type=file]').files[0];
-            if (file){
-                const picture = window.URL.createObjectURL(file);
-                console.log(picture);
-            }    
+        uploadImage() {
+            const preview = document.querySelector('.preview_picture');
+            const picture = this.$refs.picture.files[0];
+
+            const reader = new FileReader();
+            reader.addEventListener("load", function () {
+                // on convertit l'image en une chaîne de caractères base64
+                preview.src = reader.result;
+            }, false);
+
+            if (picture) {
+                reader.readAsDataURL(picture);
+            }
+            this.file = picture;
+            console.log(picture);
         },
         updateAccount() {
-            const file = document.querySelector('input[type=file]').files[0];
-            
-            this.$store.dispatch('updateAccount', {
-                picture: picture,
-                username: this.username,
-                bio: this.bio
-            })
+            const formData = new FormData();
+            formData.append("username", this.username);
+            formData.append("bio", this.bio);
+            if (this.file !== null) {
+                formData.append("picture", this.file);
+            }
+            this.$store.dispatch('updateAccount', formData)
                 .then(function (res) {
                     console.log(res);
                 },
                     function (error) {
                         console.log(error);
                     })
-            this.$router.push('/home');
+            this.$router.push('home');
         },
     }
 }
