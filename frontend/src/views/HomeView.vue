@@ -52,8 +52,7 @@
       <!--Publication_card-->
       <div class="publication-card" v-for="publication of publications" :key="publication.id" :id="publication.id">
 
-          <!--user_profil_info-->
-          <RouterLink to="/profile">
+          <!--user_profil_info--> 
             <div class="publication-card_user-profile">
               <h2 class="publication-card_user-name">{{ publication.User.username }}</h2>
               <div class="publication-card_user-img">
@@ -61,7 +60,6 @@
                 <fa v-else="user.picture === null" class="default_userIcon" icon="circle-user"></fa>
               </div>
             </div>
-          </RouterLink>
           <!--user_profil_info_end-->
 
           <!--publication_media-->
@@ -70,6 +68,7 @@
               class="publication_media"
               src="../assets/images/fabio-alves-IQCwKOpIQro-unsplash.jpg"
               alt="Photo de plusieur personnes qui boivent un verre"
+              @dblclick="like()"
             />
           </div>
           <!--publication_media_end-->
@@ -78,11 +77,12 @@
             <div class="publication-card_under-media-bar">
               <div class="publication-card_datetime">
                 <p><strong>Publié le {{ publication.createdAt }}</strong></p>
+                <p v-if="publication.likes > 2">likes</p>
+                <p v-else >O like</p> 
               </div>
               <div class="publication-card_btn">
-                <fa class="publication-card_delete-btn" icon="trash-can" @click.prevent="getPublicationId" />
-                <!-- <fa class="liked publication-card_like-btn" icon="heart" /> -->
-                <fa class="publication-card_like-btn" :icon="['far', 'heart']"  />
+                <fa v-if="mode === 'publicationLike'" class="publication-card_like-btn" icon="heart" @click.prevent="unLike" />
+                <fa v-else="mode === 'publicationNotLike'" class="liked publication-card_like-btn" :icon="['far', 'heart']" @click.self="like()"/>
               </div>
             </div>
             <div class="publication-card_text">
@@ -102,7 +102,6 @@
   </main>
 <!--publication_end-->
 
-
   <RouterView />
 </template>
 
@@ -112,6 +111,11 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'home',
+  data: function (){
+        return{
+            mode:'home',
+        }
+  },
   beforeMount(){
       if (this.$store.state.user.userId == -1) {
       this.$router.push('/');
@@ -130,6 +134,12 @@ export default {
     })
   },
   methods: {
+    like() {
+      this.mode='publicationLike';
+    },
+    unLike() {
+      this.mode='publicationNotLike';
+    },
   }
 }
 </script>

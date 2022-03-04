@@ -5,7 +5,7 @@
                 <img class="preview_picture" :src="user.picture" alt="Photo de profil de l'utilisateur" />
             </div>
             <div class="profile_update-wrapper">
-                <form class="profile_update-profile_info" enctype="multipart/form-data">
+                <form class="profile_update-profile_info" >
                     <div class="profile_update-profile_user-img">
                         <label for="pictures">
                             <strong>Image de profile</strong>
@@ -14,7 +14,7 @@
                         @change="uploadImage"
                         type="file"
                         accept="image/png, image/jpeg,
-                        image/bmp, image/gif"
+                        image/bmp"
                         ref="picture"
                         name="picture"
                         />
@@ -82,21 +82,6 @@ export default {
         })
     },
     methods: {
-        previewFile() {
-            const preview = document.querySelector('.preview_picture');
-            const picture = document.querySelector('input[type=file]').files[0];
-            const reader = new FileReader();
-            
-            reader.addEventListener("load", function () {
-                // on convertit l'image en une chaîne de caractères base64
-                preview.src = reader.result;
-            }, false);
-
-            if (picture) {
-                reader.readAsDataURL(picture);
-            }
-            return picture;
-        },
         uploadImage() {
             const preview = document.querySelector('.preview_picture');
             const picture = this.$refs.picture.files[0];
@@ -115,19 +100,20 @@ export default {
         },
         updateAccount() {
             const formData = new FormData();
-            formData.append("username", this.username);
-            formData.append("bio", this.bio);
             if (this.file !== null) {
                 formData.append("picture", this.file);
             }
-            this.$store.dispatch('updateAccount', formData)
+            this.$store.dispatch('updateAccount', {
+                username: this.username,
+                bio: this.bio,
+                picture: this.file
+            })
                 .then(function (res) {
                     console.log(res);
                 },
                     function (error) {
                         console.log(error);
                     })
-            this.$router.push('home');
         },
     }
 }

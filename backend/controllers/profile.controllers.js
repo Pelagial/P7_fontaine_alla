@@ -64,13 +64,14 @@ module.exports.selectOneUserProfile = async (req, res) => {
 module.exports.updateUserProfile = async (req, res) => {
   //Get auth header
   headerAuth = req.headers['authorization'];
+  const userId = jwtUtils.getUserId(headerAuth);
+  console.log(userId);
 
   try {
-    const userId = jwtUtils.getUserId(headerAuth);
     let newPicture;
-    let user = await models.User.findOne({ where: { id: id } }); // we found the user
+    let user = await models.User.findOne({ where: { id: userId } }); // we found the user
     if (userId === user.id) {
-      if (req.file && user.photo) {
+      if (req.file && user.ppicture) {
         newPicture = `${req.protocol}://${req.get("host")}/api/upload/${
           req.file.filename
         }`;
@@ -96,7 +97,11 @@ module.exports.updateUserProfile = async (req, res) => {
       if (req.body.username) {
         user.username = req.body.username;
       }
-      const newUser = await user.save({ fields: ["username", "bio", "picture"] }); // we save change in ddb
+      const newUser = models.User.save({
+        picture: newPicture,
+        username: req.body.username,
+        bio: req.body.bio,
+      }) // we save change in ddb
       res.status(200).json({
         user: newUser,
         message: "Votre profil a bien été modifié",

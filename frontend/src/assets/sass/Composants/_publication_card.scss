@@ -25,9 +25,12 @@
     border-radius: 25px;
     object-fit: cover;
     overflow: hidden;
-    &:active{
-      opacity: .2;
-    }
+  }
+  &_media-upload{
+    &:hover{
+      cursor: pointer;
+      color: $color-secondary;
+  }
   }
   &_under-media-bar{
     @include flex-center;

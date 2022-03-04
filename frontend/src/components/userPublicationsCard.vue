@@ -3,7 +3,7 @@
       <div class="publication-card" v-for="userPublication of userPublications" :key="userPublication.id" :id="userPublication.id">
 
           <!--publication_media-->
-          <div class="publication-card_media-upload">
+          <div class="publication-card_media-upload" @click.prevent="getPublicationId">
             <img
               class="publication_media"
               src="../assets/images/fabio-alves-IQCwKOpIQro-unsplash.jpg"
@@ -16,11 +16,11 @@
             <div class="publication-card_under-media-bar">
               <div class="publication-card_datetime">
                 <p><strong>Publié le {{ userPublication.createdAt }}</strong></p>
+                <p v-if="userPublication.likes > 2">likes</p>
+                <p v-else >O like</p> 
               </div>
               <div class="publication-card_btn">
                 <fa class="publication-card_delete-btn" icon="trash-can" @click.prevent="getPublicationId" />
-                <!-- <fa class="liked publication-card_like-btn" icon="heart" /> -->
-                <fa class="publication-card_like-btn" :icon="['far', 'heart']"  />
               </div>
             </div>
             <div class="publication-card_text">
@@ -58,7 +58,8 @@ export default {
     },
     methods: {
       getPublicationId() {
-      console.log(userPublication.id);
+            let publicationId = this.$store.state.userPublication;
+            console.log(publicationId);
       },
     }
 }

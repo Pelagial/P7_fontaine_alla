@@ -182,7 +182,7 @@ const store = createStore({
       let id = this.state.publication.id;
       instance.get(`/publication/${id}`)
         .then(function(response){
-          commit('publications', response.data);
+          commit('publication', response.data);
         })
         .catch(function(){
         })

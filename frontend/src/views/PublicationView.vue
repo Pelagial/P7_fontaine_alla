@@ -22,13 +22,14 @@
           <label for="attachement">
             <strong>Choisi un media à partager</strong>
           </label>
+          <img class="media_upload_preview" src="" />
           <input
-            @change="uploadImage"
+            @change.prevent="uploadImage()"
             class="publication_content-media"
             type="file"
             accept="image/png, image/jpeg,
             image/bmp, image/gif"
-            ref="file"
+            ref="attachement"
             name="attachement"
           />
         </div>
@@ -98,13 +99,25 @@ export default {
   },
   methods: {
     uploadImage() {
-      const file = this.$refs.file.files[0];
-      this.file = file;
+            const preview = document.querySelector('.media_upload_preview');
+            const attachement = this.$refs.attachement.files[0];
+
+            const reader = new FileReader();
+            reader.addEventListener("load", function () {
+                // on convertit l'image en une chaîne de caractères base64
+                preview.src = reader.result;
+            }, false);
+
+            if (attachement) {
+                reader.readAsDataURL(attachement);
+            }
+            this.file = attachement;
+            console.log(attachement);
     },
     createPost(){
             const self = this;
             this.$store.dispatch('createPost', {
-                attachement: this.file,
+                attachement: this.attachement,
                 title: this.title,
                 message: this.message
             })

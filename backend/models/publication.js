@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
   Publication.init({
     title: DataTypes.STRING,
     message: DataTypes.STRING,
-    attachment: DataTypes.STRING,
+    attachment: DataTypes.BLOB("long"),
     likes: DataTypes.INTEGER
   }, {
     sequelize,
