@@ -62,55 +62,30 @@ module.exports.selectOneUserProfile = async (req, res) => {
   
 /** updateUserProfile ctrl */
 module.exports.updateUserProfile = async (req, res) => {
-  //Get auth header
-  headerAuth = req.headers['authorization'];
-  const userId = jwtUtils.getUserId(headerAuth);
-  console.log(userId);
+    //Get auth header
+    headerAuth = req.headers['authorization'];
+    userId = jwtUtils.getUserId(headerAuth);
 
-  try {
-    let newPicture;
-    let user = await models.User.findOne({ where: { id: userId } }); // we found the user
-    if (userId === user.id) {
-      if (req.file && user.ppicture) {
-        newPicture = `${req.protocol}://${req.get("host")}/api/upload/${
-          req.file.filename
-        }`;
-        const filename = user.picture.split("/upload")[1];
-        fs.unlink(`upload/${filename}`, (err) => {
-          // if there is already a picture we delete it
-          if (err) console.log(err);
-          else {
-            console.log(`Deleted file: upload/${filename}`);
-          }
-        });
-      } else if (req.file) {
-        newPicture = `${req.protocol}://${req.get("host")}/api/upload/${
-          req.file.filename
-        }`;
-      }
-      if (newPicture) {
-        user.picture = newPicture;
-      }
-      if (req.body.bio) {
-        user.bio = req.body.bio;
-      }
-      if (req.body.username) {
-        user.username = req.body.username;
-      }
-      const newUser = models.User.save({
-        picture: newPicture,
-        username: req.body.username,
-        bio: req.body.bio,
-      }) // we save change in ddb
-      res.status(200).json({
-        user: newUser,
-        message: "Votre profil a bien été modifié",
-      });
-    } else {
-      res
-        .status(400)
-        .json({ message: "Vous n'avez pas les droits requis" });
+    if (userId < 0){
+      return res.status(400).json({ 'error':'wrong token' });
     }
+
+    try{
+      models.User.findOne({
+        where: { id: userId }
+      }).then(function(userFound) {
+        if (userFound){
+          userFound.update({
+            username: (username ? username: userFound.username),
+            bio: (bio ? bio: userFound.bio),
+            picture: (picture ? picture: userfound.picture)
+          })
+        } else {
+          res.status(500).json({ 'error':'user not found' });
+        }
+      }).catch(function(err){
+        res.status(500).json({ 'error':'cannot found user' });
+      })
   } catch (error) {
     return res.status(500).send({ error: "Erreur serveur" });
   }
@@ -127,7 +102,6 @@ module.exports.deleteUserProfile = async (req, res) => {
     }
 
     try{
-      // Waterfall function
       models.User.findOne({
         where: { id: userId }
       }).then(function(user) {

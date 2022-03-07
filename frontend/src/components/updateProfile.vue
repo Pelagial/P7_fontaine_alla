@@ -80,40 +80,32 @@ export default {
         ...mapState({
             user: 'userInfos',
         })
+        
     },
     methods: {
         uploadImage() {
             const preview = document.querySelector('.preview_picture');
-            const picture = this.$refs.picture.files[0];
-
             const reader = new FileReader();
+            const pictureUrl = reader.readAsDataURL(this.$refs.picture.files[0]);
             reader.addEventListener("load", function () {
                 // on convertit l'image en une chaîne de caractères base64
                 preview.src = reader.result;
             }, false);
-
-            if (picture) {
-                reader.readAsDataURL(picture);
-            }
-            this.file = picture;
-            console.log(picture);
         },
         updateAccount() {
-            const formData = new FormData();
-            if (this.file !== null) {
-                formData.append("picture", this.file);
-            }
+            const reader = new FileReader();
+            const picture = URL.createObjectURL(this.$refs.picture.files[0]);
             this.$store.dispatch('updateAccount', {
                 username: this.username,
                 bio: this.bio,
-                picture: this.file
+                picture: picture
             })
                 .then(function (res) {
                     console.log(res);
                 },
-                    function (error) {
-                        console.log(error);
-                    })
+                function (error) {
+                    console.log(error);
+                })
         },
     }
 }

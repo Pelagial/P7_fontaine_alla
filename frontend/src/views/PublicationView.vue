@@ -111,13 +111,13 @@ export default {
             if (attachement) {
                 reader.readAsDataURL(attachement);
             }
-            this.file = attachement;
-            console.log(attachement);
     },
     createPost(){
+            const reader = new FileReader();
+            const attachement = URL.createObjectURL(this.$refs.attachement.files[0]);
             const self = this;
             this.$store.dispatch('createPost', {
-                attachement: this.attachement,
+                attachement: attachement,
                 title: this.title,
                 message: this.message
             })

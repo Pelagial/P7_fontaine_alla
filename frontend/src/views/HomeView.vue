@@ -66,8 +66,8 @@
           <div class="publication-card_media-upload">
             <img
               class="publication_media"
-              src="../assets/images/fabio-alves-IQCwKOpIQro-unsplash.jpg"
-              alt="Photo de plusieur personnes qui boivent un verre"
+              :src="publication.attachement"
+              alt="media partager par l'utilisateur {{ user.username }}"
               @dblclick="like()"
             />
           </div>
