@@ -1,5 +1,5 @@
 import { createStore } from 'vuex'
-
+import createPersistedState from "vuex-persistedstate";
 import axios from 'axios'
 
 const instance = axios.create({
@@ -37,18 +37,23 @@ const store = createStore({
       picture: '',
     },
     publication:{
+      id:'',
       attachement: '',
       title:'',
       message:''
     },
     publications:[],
     userPublication:{
+      id:'',
       attachement: '',
       title:'',
       message:''
     },
     userPublications:[],
   },
+  plugins: [createPersistedState({
+    storage: window.sessionStorage,
+  })],
   mutations: {
     setStatus (state, status){
       state.status= status;
@@ -149,16 +154,15 @@ const store = createStore({
           commit(error);
         })
     },
-    createPost: ({commit}, publication) =>{
+    createPost: ({commit}, data) =>{
       return new Promise((resolve, reject) =>{
-        instance.post('/publication/post', publication)
-        .then(function(response){
-          commit('setStatus', '');
-          resolve(response);
+        instance.post('/publication/post',
+        data)
+        .then(function(){
+          console.log('SUCCESS!!');
         })
-        .catch(function(error){
-          commit('setStatus', 'error_posting');
-          reject(error);
+        .catch(function(){
+          console.log('FAILURE!!');
         })
       })
     },
@@ -166,6 +170,15 @@ const store = createStore({
       instance.get('/publication/')
         .then(function(response){
           commit('publications', response.data);
+        })
+        .catch(function(){
+        })
+    },
+    getPublicationId: ({commit}) =>{
+      let id = this.state.publication.id;
+      instance.get('/publication/')
+        .then(function(response){
+          commit('userPublications', response.data);
         })
         .catch(function(){
         })
@@ -188,22 +201,26 @@ const store = createStore({
         })
     },
     deletePost: ({commit}) =>{
-      let id = this.state.publication.id
-      instance.get(`/publication/${id}`)
-      if (publication != ""){
-        instance.delete(`/publication/${id}`)
-        .then(function(response){
-          commit(response);
-        })
-        .catch(function(error){
-          commit(error);
-        })
-      } else {
-        
-      }
+      let id = this.state.userPublication.id;
+      console.log(id);
       
     },
   }
 })
 
 export default store
+
+
+// instance.get(`/publication/${id}`)
+//       if (publication != ""){
+//         instance.delete(`/publication/${id}`)
+//         .then(function(response){
+//           commit(response);
+//         })
+//         .catch(function(error){
+//           commit(error);
+//         })
+//       } else {
+        
+//       }
+      

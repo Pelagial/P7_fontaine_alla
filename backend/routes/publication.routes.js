@@ -12,7 +12,7 @@ const publicationCtrl = require('../controllers/publication.controllers');
 const multer = require('../middlewares/multer-config');
 
 /** import requires routes js files */
-router.post('/post', multer, publicationCtrl.creatPublication);
+router.post('/post', multer, publicationCtrl.createPublication);
 router.get('/', publicationCtrl.getAllPublication);
 router.get('/myPub', publicationCtrl.getAllPublicationFromOneUser);
 router.delete('/:id', publicationCtrl.deletePublication);

@@ -19,7 +19,7 @@ module.exports = {
     },
     process.env.JWT_SECRET_TOKEN,
     {
-      expiresIn: '1h'
+      expiresIn: '24h'
     })
   },
   parseAuthorization: function(authorization) {

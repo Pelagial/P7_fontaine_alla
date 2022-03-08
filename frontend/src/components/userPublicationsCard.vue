@@ -3,7 +3,8 @@
       <div class="publication-card" v-for="userPublication of userPublications" :key="userPublication.id" :id="userPublication.id">
 
           <!--publication_media-->
-          <div class="publication-card_media-upload" @click.prevent="getPublicationId">
+          <div class="publication-card_media-upload" 
+          :id="userPublication.id">
             <img
               class="publication_media"
               src="../assets/images/fabio-alves-IQCwKOpIQro-unsplash.jpg"
@@ -15,12 +16,12 @@
           <div class="publication-card_infos">
             <div class="publication-card_under-media-bar">
               <div class="publication-card_datetime">
-                <p><strong>Publié le {{ userPublication.createdAt }}</strong></p>
+                <p><strong>Publié le {{ moment(userPublication.createdAt).format('DD-MM-YYYY à HH:mm')}}</strong></p>
                 <p v-if="userPublication.likes > 2">likes</p>
                 <p v-else >O like</p> 
               </div>
               <div class="publication-card_btn">
-                <fa class="publication-card_delete-btn" icon="trash-can" @click.prevent="getPublicationId" />
+                <fa class="publication-card_delete-btn" icon="trash-can" @click.prevent="deletePost" />
               </div>
             </div>
             <div class="publication-card_text">
@@ -40,12 +41,13 @@
 
 <script>
 import { mapState } from 'vuex'
+import moment from 'moment'
 
 export default {
     name: 'userPublicationCard',
     data() {
         return {
-          
+          id:'',
         }
     },
     mounted: function () {
@@ -57,10 +59,19 @@ export default {
         })
     },
     methods: {
-      getPublicationId() {
-            let publicationId = this.$store.state.userPublication;
-            console.log(publicationId);
+      moment: function (date) {
+        return moment(date);
       },
+      deletePost() {
+        let id = userPublications.id;
+        console.log(id);
+        // this.$store.dispatch('deletePost')
+        // .then(function () {
+        //   console.log('publication delete');
+        // }, function () {
+        //   console.log('error deleting publication');
+        // })
+      }
     }
 }
 </script>

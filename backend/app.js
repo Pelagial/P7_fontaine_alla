@@ -58,9 +58,7 @@ db.connect((err) => {
 });
 
 /** IMAGES STATIC FOLDER ***********************************************/
-app.use('./images/profils/default', express.static(path.join(__dirname, './images/profils/default')));
-app.use('./images/posts', express.static(path.join(__dirname, './images/posts')));
-app.use('./images/profils', express.static(path.join(__dirname, './images/profils')));
+app.use('./upload', express.static(path.join(__dirname, './upload')));
 
 /** ROUTES ***********************************************/
 /** Import */

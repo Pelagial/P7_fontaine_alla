@@ -100,34 +100,22 @@ export default {
   methods: {
     uploadImage() {
             const preview = document.querySelector('.media_upload_preview');
-            const attachement = this.$refs.attachement.files[0];
-
             const reader = new FileReader();
+            const attachementUrl = reader.readAsDataURL(this.$refs.attachement.files[0]);
             reader.addEventListener("load", function () {
                 // on convertit l'image en une chaîne de caractères base64
                 preview.src = reader.result;
             }, false);
-
-            if (attachement) {
-                reader.readAsDataURL(attachement);
-            }
     },
     createPost(){
-            const reader = new FileReader();
-            const attachement = URL.createObjectURL(this.$refs.attachement.files[0]);
-            const self = this;
+            const attachement = this.$refs.attachement.files[0];
             this.$store.dispatch('createPost', {
-                attachement: attachement,
-                title: this.title,
-                message: this.message
-            })
-            .then(function () {
-                self.$router.push('home'); 
-            },
-            function (error) {
-                console.log(error);
-            });   
-        },
+              message: this.message,
+              title: this.title,
+              attachement: attachement
+            }),
+            this.$router.push('home');
+    },
   }
 }
 </script>

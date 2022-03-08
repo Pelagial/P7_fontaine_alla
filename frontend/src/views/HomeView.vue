@@ -76,7 +76,7 @@
           <div class="publication-card_infos">
             <div class="publication-card_under-media-bar">
               <div class="publication-card_datetime">
-                <p><strong>Publié le {{ publication.createdAt }}</strong></p>
+                <p><strong>Publié le {{ moment(publication.createdAt).format('DD-MM-YYYY à HH:mm')}}</strong></p>
                 <p v-if="publication.likes > 2">likes</p>
                 <p v-else >O like</p> 
               </div>
@@ -108,6 +108,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import moment from 'moment'
 
 export default {
   name: 'home',
@@ -140,6 +141,9 @@ export default {
     unLike() {
       this.mode='publicationNotLike';
     },
-  }
+    moment: function (date) {
+      return moment(date);
+    },
+  },
 }
 </script>

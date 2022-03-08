@@ -8,6 +8,7 @@
 const models = require ('../models');
 const asyncLib = require ('async');
 const jwtUtils = require('../utils/jwt.utils');
+const fs = require("fs");
 
 /** PARAMS ***********************************************/
 const TITLE_LIMIT = 2;
@@ -16,7 +17,7 @@ const MESSAGE_LIMIT = 4;
 /** EXPORT ***********************************************/
 
 /** creatPublication ctrl */
-module.exports.creatPublication = async (req, res) => {
+module.exports.createPublication = async (req, res) => {
   // Getting auth header
     const headerAuth = req.headers['authorization'];
     const userId = jwtUtils.getUserId(headerAuth);
@@ -32,14 +33,7 @@ module.exports.creatPublication = async (req, res) => {
     if (title.length <= TITLE_LIMIT || message.length <= MESSAGE_LIMIT) {
       return res.status(400).json({ 'error': 'invalid parameters' });
     }
-    
-    if (req.file) {
-      attachement = `${req.protocol}://${req.get("host")}/api/upload/${
-        req.file.filename
-      }`;
-    } else {
-      attachement = null;
-    }
+    console.log(req.file.attachement);
     
     try{
     // Waterfall function
