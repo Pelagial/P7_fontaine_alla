@@ -10,8 +10,8 @@
       <div class="profile_wrapper">
         <div class="profile-content">
           <div class="profile_user-img">
-            <img v-if="user.picture" :src="user.picture" alt="Photo de profil de l'utilisateur" />
-            <fa v-else="user.picture === null" class="default_userIcon" icon="circle-user"></fa>          
+            <img v-if="user.imageUrl" :src="user.imageUrl" alt="Photo de profil de l'utilisateur" />
+            <fa v-else="user.imageUrl === null" class="default_userIcon" icon="circle-user"></fa>          
           </div>
           <div class="profile_user-infos">
             <ul>

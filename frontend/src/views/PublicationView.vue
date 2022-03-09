@@ -7,8 +7,8 @@
     <div class="publication-header_user-profile">
               <h1 class="publication-header_user-name">{{ user.username }}</h1>
               <div class="publication-header_user-img">
-                <img v-if="user.picture" class="user_img" :src="user.picture" alt="Photo de profil de l'utilisateur" />
-                <fa v-else="user.picture === null" class="default_userIcon" icon="circle-user"></fa>
+                <img v-if="user.imageUrl" class="user_img" :src="user.imageUrl" alt="Photo de profil de l'utilisateur" />
+                <fa v-else="user.imageUrl === null" class="default_userIcon" icon="circle-user"></fa>
               </div>
             </div>
   </header>
@@ -16,10 +16,10 @@
 
   <!--Publication_formular-->
   <div class="publication_formular">
-    <form class="publication" enctype="multipart/form-data">
+    <form class="publication">
       <div class="publication_content">
         <div class="publication_content-media-upload">
-          <label for="attachement">
+          <label for="imageUrl">
             <strong>Choisi un media à partager</strong>
           </label>
           <img class="media_upload_preview" src="" />
@@ -29,8 +29,8 @@
             type="file"
             accept="image/png, image/jpeg,
             image/bmp, image/gif"
-            ref="attachement"
-            name="attachement"
+            ref="imageUrl"
+            name="imageUrl"
           />
         </div>
         <div class="publication_content-text-content">
@@ -70,7 +70,7 @@ export default {
   data: function (){
         return{
             mode:'publication',
-            attachement:'',
+            imageUrl:'',
             title:'',
             message:''
         }
@@ -101,18 +101,18 @@ export default {
     uploadImage() {
             const preview = document.querySelector('.media_upload_preview');
             const reader = new FileReader();
-            const attachementUrl = reader.readAsDataURL(this.$refs.attachement.files[0]);
+            const imageUrlPrev = reader.readAsDataURL(this.$refs.imageUrl.files[0]);
             reader.addEventListener("load", function () {
                 // on convertit l'image en une chaîne de caractères base64
                 preview.src = reader.result;
             }, false);
     },
     createPost(){
-            const attachement = this.$refs.attachement.files[0];
+            const file = this.$refs.imageUrl.files[0];
             this.$store.dispatch('createPost', {
               message: this.message,
               title: this.title,
-              attachement: attachement
+              imageUrl: file
             }),
             this.$router.push('home');
     },

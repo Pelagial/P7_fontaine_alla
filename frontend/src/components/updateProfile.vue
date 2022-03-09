@@ -2,12 +2,12 @@
     <div class="profile_update-wrapper">
         <div class="profile_update-content">
             <div class="profile_user-img">
-                <img class="preview_picture" :src="user.picture" alt="Photo de profil de l'utilisateur" />
+                <img class="preview_picture" :src="user.imageUrl" alt="Photo de profil de l'utilisateur" />
             </div>
             <div class="profile_update-wrapper">
                 <form class="profile_update-profile_info" >
                     <div class="profile_update-profile_user-img">
-                        <label for="pictures">
+                        <label for="imageUrl">
                             <strong>Image de profile</strong>
                         </label>
                         <input 
@@ -15,8 +15,8 @@
                         type="file"
                         accept="image/png, image/jpeg,
                         image/bmp"
-                        ref="picture"
-                        name="picture"
+                        ref="imageUrl"
+                        name="imageUrl"
                         />
                     </div>
                     <div class="profile_update-container">
@@ -63,7 +63,7 @@ export default {
     name: 'updateProfile',
     data() {
         return {
-            picture: '',
+            imageUrl: '',
             username: '',
             bio: '',
         }
@@ -86,7 +86,7 @@ export default {
         uploadImage() {
             const preview = document.querySelector('.preview_picture');
             const reader = new FileReader();
-            const pictureUrl = reader.readAsDataURL(this.$refs.picture.files[0]);
+            const imageUrlPrev = reader.readAsDataURL(this.$refs.imageUrl.files[0]);
             reader.addEventListener("load", function () {
                 // on convertit l'image en une chaîne de caractères base64
                 preview.src = reader.result;
@@ -94,11 +94,11 @@ export default {
         },
         updateAccount() {
             const reader = new FileReader();
-            const picture = URL.createObjectURL(this.$refs.picture.files[0]);
+            const imageUrl = URL.createObjectURL(this.$refs.imageUrl.files[0]);
             this.$store.dispatch('updateAccount', {
                 username: this.username,
                 bio: this.bio,
-                picture: picture
+                imageUrl: imageUrl
             })
                 .then(function (res) {
                     console.log(res);

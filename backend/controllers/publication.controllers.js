@@ -17,66 +17,58 @@ const MESSAGE_LIMIT = 4;
 /** EXPORT ***********************************************/
 
 /** creatPublication ctrl */
-module.exports.createPublication = async (req, res) => {
+
+exports.createPublication = async (req, res) => {
   // Getting auth header
-    const headerAuth = req.headers['authorization'];
-    const userId = jwtUtils.getUserId(headerAuth);
-
+  const headerAuth = req.headers['authorization'];
+  const userId = jwtUtils.getUserId(headerAuth);
+  
   // Params
-    const title   = req.body.title;
-    const message = req.body.message;
+  const title =req.body.title;
+  console.log(title);
+  const message =req.body.message;
+  console.log(message);
+  const imageUrl =`${req.protocol}://${req.get("host")}/backend/upload/${req.file.filename}`;
+  console.log(imageUrl);
 
-    if (title == null || message == null) {
-      return res.status(400).json({ 'error': 'missing parameters' });
-    }
+  if (title == null || message == null) {
+    return res.status(400).json({ 'error': 'missing parameters' });
+  }
 
-    if (title.length <= TITLE_LIMIT || message.length <= MESSAGE_LIMIT) {
-      return res.status(400).json({ 'error': 'invalid parameters' });
-    }
-    console.log(req.file.attachement);
-    
-    try{
-    // Waterfall function
-    asyncLib.waterfall([
-      function(done) {
-        models.User.findOne({
-          where: { id: userId }
-        })
-        .then(function(userFound) {
-          done(null, userFound);
-        })
-        .catch(function(err) {
-          return res.status(500).json({ 'error': 'unable to verify user' });
-        });
-      },
-      function(userFound, done) {
-        if(userFound) {
-          models.Publication.create({
-            title  : title,
-            message: message,
-            attachment: attachement,
-            likes  : 0 ,
-            UserId : userFound.id
-          })
-          .then(function(newPublication) {
-            done(newPublication);
-          });
-        } else {
-          res.status(404).json({ 'error': 'user not found' });
-        }
-      },
-    ], function(newPublication) {
-      if (newPublication) {
-        return res.status(201).json(newPublication);
-      } else {
-        return res.status(500).json({ 'error': 'cannot post publication' });
-      }
+  if (title.length <= TITLE_LIMIT || message.length <= MESSAGE_LIMIT) {
+    return res.status(400).json({ 'error': 'invalid parameters' });
+  }
+
+  try {
+    const user = await models.User.findOne({
+      attributes: ["username", "id", "imageUrl"],
+      where: { id: userId },
     });
-    } catch (error) {
-      return res.status(500).send({ error: "Erreur serveur" });
+    console.log(user);
+    if (user) {
+      newPublication = models.Publication.create({
+        include: [
+          {
+            model: models.User,
+            attributes: ["username", "id", "imageUrl"],
+          },
+        ],
+        message: message,
+        title: title,
+        imageUrl: imageUrl,
+        UserId: user.id,
+      });
+      console.log(publication);
+      res
+        .status(201)
+        .json({ publication: publication, messageRetour: "Votre publication est ajouté" });
+    } else {
+      res.status(400).send({ error: "Erreur " });
     }
+  } catch (error) {
+    return res.status(500).send({ error: "Erreur serveur" });
+  }
 };
-
   
 /** getAllPublication ctrl */
 module.exports.getAllPublication = async (req, res) => {
@@ -87,7 +79,7 @@ module.exports.getAllPublication = async (req, res) => {
       order: [(order != null) ? order.split(':') : ['createdAt', 'DESC']],
       include: [{
         model: models.User,
-        attributes: [ 'username','picture' ]
+        attributes: [ 'username','imageUrl' ]
       }]
     }).then(function(publication) {
       if (publication) {
@@ -112,7 +104,7 @@ module.exports.getOnePublication = async (req, res) => {
       where: { id: req.params.id },
       include: [{
         model: models.User,
-        attributes: [ 'username','picture' ]
+        attributes: [ 'username','imageUrl' ]
       }]
     });
     res.status(200).json(publication);
@@ -134,7 +126,7 @@ module.exports.getAllPublicationFromOneUser = async (req, res) => {
       order: [(order != null) ? order.split(':') : ['createdAt', 'DESC']],
       include: [{
         model: models.User,
-        attributes: [ 'username','picture' ]
+        attributes: [ 'username','imageUrl' ]
       }]
     }).then(function(publication) {
       if (publication) {
@@ -159,8 +151,8 @@ module.exports.deletePublication = async (req, res) => {
     const checkAdmin = await models.User.findOne({ where: { id: userId }});
     const publication = await models.Publication.findOne({ where: { id: req.params.id } });
     if (userId === publication.UserId || checkAdmin.isAdmin === true) {
-      if (publication.attachement) {
-        const filename = publication.attachement.split("/upload")[1];
+      if (publication.imageUrl) {
+        const filename = publication.imageUrlt.split("/upload")[1];
         fs.unlink(`upload/${filename}`, () => {
           models.Publication.destroy({ where: { id: publication.id } });
           res.status(200).json({ message: "Publication supprimé" });

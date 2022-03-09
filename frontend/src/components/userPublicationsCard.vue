@@ -47,7 +47,7 @@ export default {
     name: 'userPublicationCard',
     data() {
         return {
-          id:'',
+
         }
     },
     mounted: function () {
@@ -63,14 +63,9 @@ export default {
         return moment(date);
       },
       deletePost() {
-        let id = userPublications.id;
+
         console.log(id);
-        // this.$store.dispatch('deletePost')
-        // .then(function () {
-        //   console.log('publication delete');
-        // }, function () {
-        //   console.log('error deleting publication');
-        // })
+        
       }
     }
 }

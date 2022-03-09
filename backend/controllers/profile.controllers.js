@@ -10,9 +10,6 @@ const models = require ('../models');
 const asyncLib = require ('async');
 require("dotenv").config();
 
-const db_import = require("../config/db-config");
-const db = db_import.DB();
-
 /** EXPORT ***********************************************/
 
 /** getAllUserProfile ctrl */
@@ -43,7 +40,7 @@ module.exports.selectOneUserProfile = async (req, res) => {
   
   try{
     models.User.findOne({
-      attributes: [ 'id', 'email', 'username', 'bio', 'picture' ],
+      attributes: [ 'id', 'email', 'username', 'bio', 'imageUrl' ],
       where: { id: userId }
     }).then(function(user) {
       if (user){
@@ -69,12 +66,12 @@ module.exports.updateUserProfile = async (req, res) => {
     // Params
     const bio = req.body.bio;
     const username = req.body.username;
-    const picture = req.file.picture;
+    const imageUrl = req.file.imageUrl;
 
     asyncLib.waterfall([
       function(done) {
         models.User.findOne({
-          attributes: ['id', 'bio', 'picture'],
+          attributes: ['id', 'bio', 'imageUrl'],
           where: { id: userId }
         }).then(function (userFound) {
           done(null, userFound);
@@ -88,7 +85,7 @@ module.exports.updateUserProfile = async (req, res) => {
           userFound.update({
             bio: (bio ? bio : userFound.bio),
             username: (username ? username : userFound.username),
-            picture: (picture ? picture : userFound.picture)
+            imageUrl: (imageUrl ? imageUrl : userFound.imageUrl)
           }).then(function() {
             done(userFound);
           }).catch(function(err) {

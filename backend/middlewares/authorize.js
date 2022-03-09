@@ -6,18 +6,18 @@
 
 /** General import */
 const jwt = require('jsonwebtoken');
-
-const db_import = require("../config/db-config");
-const db = db_import.DB();
+const jwtUtils = require('../utils/jwt.utils');
 require('dotenv').config();
 
 /** EXPORT ***********************************************/
 /** Compare that the actual token is the same as the decoded token */
 module.exports = (req, res, next) => {
   try {
-    const token = req.headers.authorization.split(' ')[1];
+    const headerAuth = req.headers['authorization'];
+    const userId = jwtUtils.getUserId(headerAuth);
+    const token = module.exports.parseAuthorization(authorization);
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET_TOKEN);
-    const userId = decodedToken.userId;
+
     req.auth = { userId };  
     if (req.body.userId && req.body.userId !== userId) {
       throw 'Invalid user ID';

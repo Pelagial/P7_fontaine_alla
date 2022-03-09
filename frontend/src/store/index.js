@@ -1,5 +1,4 @@
 import { createStore } from 'vuex'
-import createPersistedState from "vuex-persistedstate";
 import axios from 'axios'
 
 const instance = axios.create({
@@ -34,26 +33,13 @@ const store = createStore({
       email: '',
       username: '',
       bio: '',
-      picture: '',
+      imageUrl: '',
     },
-    publication:{
-      id:'',
-      attachement: '',
-      title:'',
-      message:''
-    },
+    publication:{},
     publications:[],
-    userPublication:{
-      id:'',
-      attachement: '',
-      title:'',
-      message:''
-    },
+    userPublication:{},
     userPublications:[],
   },
-  plugins: [createPersistedState({
-    storage: window.sessionStorage,
-  })],
   mutations: {
     setStatus (state, status){
       state.status= status;
@@ -154,17 +140,15 @@ const store = createStore({
           commit(error);
         })
     },
-    createPost: ({commit}, data) =>{
-      return new Promise((resolve, reject) =>{
-        instance.post('/publication/post',
-        data)
-        .then(function(){
-          console.log('SUCCESS!!');
+    createPost({ commit }, publication) {
+      instance.post('/publication/post', publication)
+        .then((response) => {
+          const publication = response.data;
+          commit("ADD_POST", publication);
         })
-        .catch(function(){
-          console.log('FAILURE!!');
+        .catch(function(error){
+          commit(error);
         })
-      })
     },
     getAllPublication: ({commit}) =>{
       instance.get('/publication/')

@@ -16,10 +16,6 @@ const router = createRouter({
       component: PublicationView
     },
     {
-      path: '/publication/:id',
-      name: 'publication',
-    },
-    {
       path: '/profile',
       name: 'profile',
       // route level code-splitting

@@ -11,6 +11,9 @@ const mysql = require('mysql');
 const path = require('path');
 const fileUpload =  require('express-fileupload');
 
+/** DB import */
+const { sequelize } = require('./models/index');
+
 const helmet = require('helmet');
 require('dotenv').config();
 
@@ -47,18 +50,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 
 /** DB CONNECT ***********************************************/
-const db_import = require("./config/db-config");
-const db = db_import.DB();
-
-db.connect((err) => {
-    if(err){
-        throw err;
-    }
+const dbTest = async function () {
+  try {
+    await sequelize.authenticate();
     console.log('Mysql DB connected !');
-});
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+  }
+};
+dbTest();
 
 /** IMAGES STATIC FOLDER ***********************************************/
-app.use('./upload', express.static(path.join(__dirname, './upload')));
+app.use('/upload', express.static(path.join(__dirname, 'upload')));
 
 /** ROUTES ***********************************************/
 /** Import */

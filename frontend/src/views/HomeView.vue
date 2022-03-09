@@ -21,8 +21,8 @@
       </RouterLink>
       <RouterLink to="/profile">
         <div class="nav-bar-header_user-profile">
-          <img v-if="user.picture" class="user_img" :src="user.picture" alt="Photo de profil de l'utilisateur" />
-          <fa v-else="user.picture === null" class="default_userIcon" icon="circle-user"></fa>
+          <img v-if="user.imageUrl" class="user_img" :src="user.imageUrl" alt="Photo de profil de l'utilisateur" />
+          <fa v-else="user.imageUrl === null" class="default_userIcon" icon="circle-user"></fa>
         </div>
       </RouterLink>
       </div>
@@ -39,8 +39,8 @@
     </RouterLink>
     <RouterLink to="/profile">
       <div class="nav-bar_user-profile">
-        <img v-if="user.picture" class="user_img" :src="user.picture" alt="Photo de profil de l'utilisateur" />
-        <fa v-else="user.picture === null" class="default_userIcon" icon="circle-user"></fa>
+        <img v-if="user.imageUrl" class="user_img" :src="user.imageUrl" alt="Photo de profil de l'utilisateur" />
+        <fa v-else="user.imageUrl === null" class="default_userIcon" icon="circle-user"></fa>
       </div>
     </RouterLink>
   </nav>
@@ -56,8 +56,8 @@
             <div class="publication-card_user-profile">
               <h2 class="publication-card_user-name">{{ publication.User.username }}</h2>
               <div class="publication-card_user-img">
-                <img v-if="publication.User.picture" :src="publication.User.picture" alt="Photo de profil de l'utilisateur"/>
-                <fa v-else="user.picture === null" class="default_userIcon" icon="circle-user"></fa>
+                <img v-if="publication.User.imageUrl" :src="publication.User.imageUrl" alt="Photo de profil de l'utilisateur"/>
+                <fa v-else="user.imageUrl === null" class="default_userIcon" icon="circle-user"></fa>
               </div>
             </div>
           <!--user_profil_info_end-->
@@ -66,7 +66,7 @@
           <div class="publication-card_media-upload">
             <img
               class="publication_media"
-              :src="publication.attachement"
+              :src="publication.imageUrl"
               alt="media partager par l'utilisateur {{ user.username }}"
               @dblclick="like()"
             />
