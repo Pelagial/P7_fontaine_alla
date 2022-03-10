@@ -1,64 +1,100 @@
 import { createStore } from 'vuex'
+import createPersistedState from 'vuex-persistedstate';
+import PostService from '../services/PostService';
+import Api from '../services/Api';
+import Auth from '../services/Auth';
 import axios from 'axios'
 
-const instance = axios.create({
-  baseURL: 'http://localhost:5000/api/'
-});
-
-// Get user auth token from localstorage
-let user = localStorage.getItem('user');
-if (!user) {
- user = {
-    userId: -1,
-    token: '',
-  }; 
-} else {
-  try {
-    user = JSON.parse(user);
-    instance.defaults.headers.common['Authorization'] = user.token;
-  } catch (ex) {
-    user = {
-      userId: -1,
-      token: '',
-    };
-  }
-}
 
 // Create a new store instance
 const store = createStore({
+  strict: true,
   state: {
     status:'',
-    user: user,
-    userInfos:{
-      email: '',
-      username: '',
-      bio: '',
-      imageUrl: '',
-    },
+    user: {},
+    users: [],
+    token: null,
+    isLoggedIn: false,
+    isLoading: false,
+    message: "",
+    error: "",
+
     publication:{},
     publications:[],
     userPublication:{},
     userPublications:[],
   },
-  mutations: {
-    setStatus (state, status){
-      state.status= status;
+  plugins: [createPersistedState({
+    storage: window.sessionStorage,
+  })],
+  getters: {
+    posts(state) {
+      return state.posts;
     },
-    logUser: function (state, user) {
-      instance.defaults.headers.common['Authorization'] = user.token;
-      localStorage.setItem('user', JSON.stringify(user));
+    post(state) {
+      return state.post;
+    },
+    users(state) {
+      return state.users;
+    },
+    user(state) {
+      return state.user;
+    },
+    messageRetour(state) {
+      return state.message;
+    },
+    errorMessage(state) {
+      return state.error;
+    },
+    isLogged(state) {
+      return state.isLoggedIn;
+    },
+  },
+  mutations: {
+    // users
+    set_token(state, token) {
+      state.token = token;
+      if (token) {
+        state.isLoggedIn = true;
+      } else {
+        state.isLoggedIn = false;
+      }
+    },
+    delete_token(state) {
+      state.token = null;
+      state.user = '';
+      state.isLoggedIn = false;
+    },
+    set_user(state, user) {
       state.user = user;
     },
-    userInfos: function (state, userInfos) {
-      state.userInfos = userInfos;
+    get_user_by_id(state, user) {
+      state.user = user;
     },
-    logout: function (state) {
-      state.user = {
-        userId: -1,
-        token: '',
-      }
-      localStorage.removeItem('user');
+    get_user(state, users) {
+      state.users = users;
     },
+    update_account(state, id, user) {
+      Object.assign(
+        state.users.find((element) => element.id === id),
+        user
+      );
+      state.message = "compte modifié";
+    },
+    delete_account(state, id) {
+      state.users = [...state.users.filter((element) => element.id !== id)];
+      state.message = "compte supprimé";
+    },
+    log_out(state) {
+      sessionStorage.clear();
+      state.token = null;
+      state.user = null;
+      state.isLoggedIn = false;
+      state.message = "";
+      state.error = "";
+    },
+    // end users
+
     publication: function(state, publication) {
       state.publication = publication;
     },
@@ -77,134 +113,56 @@ const store = createStore({
 
   },
   actions: {
-    login: ({commit}, userInfos) =>{
-      commit('setStatus', 'loading');
-      return new Promise((resolve, reject) =>{
-        instance.post('/users/login', userInfos)
-        .then(function(response){
-          commit('setStatus', '');
-          commit('logUser', response.data);
-          resolve(response);
-        })
-        .catch(function(error){
-          commit('setStatus', 'error_login');
-          reject(error);
-        })
+    //users
+    setToken({ commit }, token) {
+      commit('set_token', token);
+    },
+    deleteToken({ commit }, token) {
+      commit('delete_token', token);
+    },
+    logout({ commit }) {
+      commit('log_out');
+    },
+    setUser({ commit }, user) {
+      commit('set_user', user);
+    },
+    getUsers({ commit }) {
+      Auth.getUsers().then((response) => {
+        const users = response.data;
+        commit('get_user', users);
+      });
+    },
+    getUserById({ commit }) {
+      let id = this.state.user.id;
+      Auth.getUserById(id).then((response) => {
+        const user = response.data;
+        commit('get_user_by_id', user);
+      });
+    },
+    deleteAccount({ commit }, id) {
+      Auth.deleteAccount(id).then(() => {       
+          commit('delete_account', id);
       })
     },
-    createAccount: ({commit}, userInfos) =>{
-      return new Promise((resolve, reject) =>{
-        commit('setStatus', 'loading');
-        instance.post('/users/signup', userInfos)
-        .then(function(response){
-          commit('setStatus', 'created');
-          resolve(response);
+    updateAccount({ commit }, data) {
+      let id = this.state.user.id;
+      axios
+        .put(`${Api}.users/accounts/${id}`, data, {
+          headers: { Authorization: this.state.token },
         })
-        .catch(function(error){
-          commit('setStatus', 'error_create');
-          reject(error);
-        })
-      })
-    },
-    getUserInfos: ({commit}) =>{
-      instance.get('/users/profile/me')
-        .then(function(response){
-          commit('userInfos', response.data);
-        })
-        .catch(function(){
-        })
-    },
-    updateAccount: ({commit}, data) =>{
-      return new Promise((resolve, reject) =>{
-        instance.put('/users/profile/me', data)
-        .then(function(response){
-          commit();
-          resolve(response);
-        })
-        .catch(function(error){
-          reject(error);
-        })
-      })
-    },
-    deleteAccount: ({commit}) =>{
-      instance.delete('/users/profile/me')
-        .then(function(response){
-          state.user = {
-            userId: -1,
-            token: '',
-          }
-          localStorage.removeItem('user');
-          commit(response);
-        })
-        .catch(function(error){
-          commit(error);
-        })
-    },
-    createPost({ commit }, publication) {
-      instance.post('/publication/post', publication)
         .then((response) => {
-          const publication = response.data;
-          commit("ADD_POST", publication);
+          const newUser = response.data;
+          commit("update_account", id, newUser);
         })
-        .catch(function(error){
-          commit(error);
+        .then (() => {
+          PostService.getPosts().then((response) => {
+          const posts = response.data;
+          commit('get_posts', posts);
         })
+      })
     },
-    getAllPublication: ({commit}) =>{
-      instance.get('/publication/')
-        .then(function(response){
-          commit('publications', response.data);
-        })
-        .catch(function(){
-        })
-    },
-    getPublicationId: ({commit}) =>{
-      let id = this.state.publication.id;
-      instance.get('/publication/')
-        .then(function(response){
-          commit('userPublications', response.data);
-        })
-        .catch(function(){
-        })
-    },
-    getUserPublication: ({commit}) =>{
-      instance.get('/publication/myPub')
-        .then(function(response){
-          commit('userPublications', response.data);
-        })
-        .catch(function(){
-        })
-    },
-    getOnePublication: ({commit}) =>{
-      let id = this.state.publication.id;
-      instance.get(`/publication/${id}`)
-        .then(function(response){
-          commit('publication', response.data);
-        })
-        .catch(function(){
-        })
-    },
-    deletePost: ({commit}) =>{
-      let id = this.state.userPublication.id;
-      console.log(id);
-      
-    },
+    // end users
   }
 })
 
 export default store
-
-
-// instance.get(`/publication/${id}`)
-//       if (publication != ""){
-//         instance.delete(`/publication/${id}`)
-//         .then(function(response){
-//           commit(response);
-//         })
-//         .catch(function(error){
-//           commit(error);
-//         })
-//       } else {
-        
-//       }
-      

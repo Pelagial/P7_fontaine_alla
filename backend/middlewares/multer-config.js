@@ -1,36 +1,24 @@
-/**
- * MULTER MIDDLEWARE SETTINGS ***********************************************************************************
- */
+const multer = require("multer");
 
-/** IMPORT ***********************************************/
-
-/** General import */
-const multer = require('multer');
-
-
-/** PARAMS ***********************************************/
-
-/** Mime types def */
 const MIME_TYPES = {
+  // notre dictionnaire d'extensions
   "image/jpg": "jpg",
   "image/jpeg": "jpg",
   "image/png": "png",
-  "image/gif": "gif"
+  "image.gif": "gif",
+  "image.webp": "webp",
 };
 
-/** Import images files from user to DDB */
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
-    callback(null, './upload');
+    // destination des images
+    callback(null, "./upload");
   },
   filename: (req, file, callback) => {
-    const name = file.originalname.split(' ').join('_');
+    // nouveau nom du fichier image pour éviter les doublons
+    const name = file.originalname.replace(/\.[^/.]+$/, "");
     const extension = MIME_TYPES[file.mimetype];
-    callback(null, name + Date.now() + '.' + extension);
-  }
+    callback(null, name + Date.now() + "." + extension);
+  },
 });
-
-/** EXPORT ***********************************************/
-
-module.exports = multer({ storage: storage }).single('image');
-
+module.exports = multer({ storage: storage }).single("image"); // stockage de l'image publiée

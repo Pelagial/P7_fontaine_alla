@@ -8,22 +8,23 @@
 const router = require('express').Router();
 
 /** import requires js files to use routes */
-const userCtrl = require('../controllers/user.controllers');
-const profileCtrl = require('../controllers/profile.controllers');
-const multer = require('../middlewares/multer-config');
+const userCtrl = require("../controllers/user.controllers");
+const authUser = require("../middlewares/authUser");
+const auth = require("../middlewares/auth");
+const multer = require("../middlewares/multer-config");
 
 /** import requires routes js files */
 /** signup */
-router.post('/signup', userCtrl.signUp);
+router.post("/signup", authUser.checkPseudo, authUser.valid, userCtrl.signup);
 
 /** login */
-router.post('/login', userCtrl.signIn);
+router.post("/login", authUser.valid, userCtrl.login);
 
-/** profile routes */
-router.get('/profile/me', profileCtrl.selectOneUserProfile);
-router.put('/profile/me', multer, profileCtrl.updateUserProfile);
-router.delete('/profile/me', profileCtrl.deleteUserProfile);
-
+/** accounts routes */
+router.get("/accounts", auth, userCtrl.getAllUsers);
+router.put("/accounts/:id", auth, multer, userCtrl.updateAccount);
+router.get("/accounts/:id", auth, userCtrl.getAccount);
+router.delete("/accounts/:id", auth, userCtrl.deleteAccount);
 
 /** EXPORT ***********************************************/
 module.exports = router;

@@ -2,7 +2,7 @@
     <div class="profile_update-wrapper">
         <div class="profile_update-content">
             <div class="profile_user-img">
-                <img class="preview_picture" :src="user.imageUrl" alt="Photo de profil de l'utilisateur" />
+                <img class="preview_picture" :src="user.photo" alt="Photo de profil de l'utilisateur" />
             </div>
             <div class="profile_update-wrapper">
                 <form class="profile_update-profile_info" >
@@ -15,19 +15,19 @@
                         type="file"
                         accept="image/png, image/jpeg,
                         image/bmp"
-                        ref="imageUrl"
-                        name="imageUrl"
+                        ref="file"
+                        name="file"
                         />
                     </div>
                     <div class="profile_update-container">
-                        <label for="username">
-                            <strong>{{ user.username }}</strong>
+                        <label for="pseudo">
+                            <strong>{{ user.pseudo }}</strong>
                         </label>
                         <input
-                            v-model="username"
+                            v-model="pseudo"
                             type="text"
-                            placeholder="Enter New Username"
-                            name="username"
+                            placeholder="Enter New Pseudo"
+                            name="Pseudo"
                         />
                         <label for="bio">
                             <strong>
@@ -45,10 +45,12 @@
                             name="bio"
                         />
                     </div>
+                    <span class="alert_message" v-html="errorMessage" />
+                    <span class="alert-message" v-html="message" />
                     <button
                         class="publication-button"
                         type="submit"
-                        @click.prevent="updateAccount()"
+                        @click.prevent="updateAccount(user.id)"
                     >MODIFIER LE PROFIL</button>
                 </form>
             </div>
@@ -57,30 +59,24 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-
 export default {
     name: 'updateProfile',
     data() {
         return {
-            imageUrl: '',
-            username: '',
+            photo: '',
+            pseudo: '',
             bio: '',
+            messageRetour: null,
+            errorMessage: null,
         }
     },
-    mounted: function () {
-        if (this.$store.state.user.userId == -1) {
-            this.$router.push('/');
-            localStorage.removeItem('user');
-            return;
-        };
-        this.$store.dispatch('getUserInfos');
-    },
     computed: {
-        ...mapState({
-            user: 'userInfos',
-        })
-        
+        user() {
+            return this.$store.getters.user;
+        },
+    },
+    beforeMount() {
+        this.$store.dispatch("getUserById");
     },
     methods: {
         uploadImage() {
@@ -92,20 +88,30 @@ export default {
                 preview.src = reader.result;
             }, false);
         },
-        updateAccount() {
+        uploadImage() {
+            const preview = document.querySelector('.preview_picture');
             const reader = new FileReader();
-            const imageUrl = URL.createObjectURL(this.$refs.imageUrl.files[0]);
-            this.$store.dispatch('updateAccount', {
-                username: this.username,
-                bio: this.bio,
-                imageUrl: imageUrl
-            })
-                .then(function (res) {
-                    console.log(res);
-                },
-                function (error) {
-                    console.log(error);
-                })
+            const file = this.$refs.file.files[0];
+            reader.readAsDataURL(file);
+            reader.addEventListener("load", function () {
+                // we convert image in string base64
+                preview.src = reader.result;
+            }, false);
+            this.file = file;
+            console.log(this.file);
+        },
+        updateAccount() {
+            const formData = new FormData();
+            formData.append("pseudo", this.newPseudo);
+            formData.append("bio", this.newBio);
+            if (this.file !== null) {
+                formData.append("image", this.file);
+            }
+            this.$store.dispatch("getUsers");
+            this.$store.dispatch("getUserById", this.user.id);
+            this.$store.dispatch("updateAccount", formData);
+            this.$store.dispatch("getUserById", this.user.id);
+            this.$router.push('/account')
         },
     }
 }

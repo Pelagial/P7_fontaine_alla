@@ -66,7 +66,7 @@ app.use('/upload', express.static(path.join(__dirname, 'upload')));
 /** ROUTES ***********************************************/
 /** Import */
 const usersRoutes = require('./routes/user.routes');
-const publicationRoutes = require('./routes/publication.routes');
+const publicationRoutes = require('./routes/post.routes');
 
 /** Use */
 app.use('/api/users', usersRoutes);

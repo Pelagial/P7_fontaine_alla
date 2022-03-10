@@ -8,8 +8,8 @@
 const router = require('express').Router();
 
 /** import requires js files to use routes */
-const publicationCtrl = require('../controllers/publication.controllers');
-const auth = require('../middlewares/authorize');
+const publicationCtrl = require('../controllers/post.controllers');
+const auth = require('../middlewares/auth');
 const multer = require('../middlewares/multer-config');
 
 /** import requires routes js files */

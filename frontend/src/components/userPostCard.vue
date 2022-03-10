@@ -44,7 +44,7 @@ import { mapState } from 'vuex'
 import moment from 'moment'
 
 export default {
-    name: 'userPublicationCard',
+    name: 'userPostCard',
     data() {
         return {
 

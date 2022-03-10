@@ -66,10 +66,10 @@
 import { mapState } from 'vuex'
 
 export default {
-  name: 'publication',
+  name: 'post',
   data: function (){
         return{
-            mode:'publication',
+            mode:'post',
             imageUrl:'',
             title:'',
             message:''
