@@ -1,24 +1,32 @@
-const multer = require("multer");
+/**
+* MULTER MIDDLEWARE SETTINGS ***********************************************************************************
+*/
 
+/** IMPORT ***********************************************/
+
+/** General import */
+const multer = require('multer');
+
+/** Files type unification */
 const MIME_TYPES = {
-  // notre dictionnaire d'extensions
-  "image/jpg": "jpg",
-  "image/jpeg": "jpg",
-  "image/png": "png",
+  'image/jpg': 'jpg',
+  'image/jpeg': 'jpg',
+  'image/png': 'png',
   "image.gif": "gif",
   "image.webp": "webp",
 };
 
+/** Import images files from user to DDB */
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
-    // destination des images
-    callback(null, "./upload");
+    callback(null, "upload");
   },
   filename: (req, file, callback) => {
-    // nouveau nom du fichier image pour éviter les doublons
-    const name = file.originalname.replace(/\.[^/.]+$/, "");
+    const name = file.originalname.split(' ').join('_');
     const extension = MIME_TYPES[file.mimetype];
-    callback(null, name + Date.now() + "." + extension);
-  },
+    callback(null, name + Date.now() + '.' + extension);
+  }
 });
-module.exports = multer({ storage: storage }).single("image"); // stockage de l'image publiée
+
+/** EXPORT ***********************************************/
+module.exports = multer({storage: storage}).single('image');

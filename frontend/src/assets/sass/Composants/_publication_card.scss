@@ -36,9 +36,10 @@
     @include flex-center;
     padding: 2%;
     box-shadow: 0px 0px 2px $shadow-color;
+    width: 100%;
   }
   &_datetime{
-    padding: 0 5% 0 5% ; 
+    @include flex-center;
     width: 100%;
   }
   &_btn{
@@ -73,5 +74,9 @@
 /////////////////////*responsive_desktop*/
 
 @media only screen and (min-width: 1024px) {
-
+  .publication-card{
+    &_datetime{
+      margin-left: -20%;
+    }
+  }
 }

@@ -23,9 +23,7 @@ exports.createPost = async (req, res) => {
     });
     if (user !== null) {
       if (req.file) {
-        imageUrl = `${req.protocol}://${req.get("host")}/api/upload/${
-          req.file.filename
-        }`;
+        imageUrl = `${req.protocol}://${req.get("host")}/upload/${req.file.filename}`;
       } else {
         imageUrl = null;
       }
@@ -37,11 +35,10 @@ exports.createPost = async (req, res) => {
           },
         ],
         message: req.body.message,
-        link: req.body.link,
+        title: req.body.title,
         imageUrl: imageUrl,
         UserId: user.id,
       });
-
       res
         .status(201)
         .json({ post: post, messageRetour: "Votre post est ajouté" });
@@ -82,7 +79,7 @@ exports.deletePost = async (req, res) => {
 exports.getAllPosts = async (req, res) => {
   try {
     const posts = await db.Post.findAll({
-      attributes: ["id", "message", "imageUrl", "link", "createdAt"],
+      attributes: ["id","title", "message", "imageUrl", "link", "createdAt"],
       order: [["createdAt", "DESC"]],
       include: [
         {

@@ -1,7 +1,6 @@
 import { createStore } from 'vuex'
 import createPersistedState from 'vuex-persistedstate';
 import PostService from '../services/PostService';
-import Api from '../services/Api';
 import Auth from '../services/Auth';
 import axios from 'axios'
 

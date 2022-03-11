@@ -47,33 +47,82 @@
 <!--nav_bar_end-->
 
 <!--publication-->
-  <main v-if="post != null">
-      <postsCards
-      v-for="post of posts"
-      :key="post.id"
-      :post="post"
-      :id="post.id"
-      @deletePost="deletePost(post.id)"
-      />
+  <main>
+    <div class="publication-main_wrapper">
+      <div v-if="posts != null" class="publications_wrapper" v-for='post of posts'>
+      <!--Publication_card-->
+      <div class="publication-card">
+
+          <!--user_profil_info--> 
+            <div class="publication-card_user-profile">
+              <h2 class="publication-card_user-name">{{ post.User.pseudo }}</h2>
+              <div class="publication-card_user-img">
+                <img v-if="post.User.photo" :src="post.User.photo" alt="Photo de profil de l'utilisateur"/>
+                <fa v-else="user.photo === null" class="default_userIcon" icon="circle-user"></fa>
+              </div>
+            </div>
+          <!--user_profil_info_end-->
+
+          <!--publication_media-->
+          <div class="publication-card_media-upload">
+            <img
+              class="publication_media"
+              :src="post.imageUrl"
+              alt="image postée par l'utilisateur"
+              @dblclick="like()"
+            />
+          </div>
+          <!--publication_media_end-->
+          <!--publication_text-->
+          <div class="publication-card_infos">
+            <div class="publication-card_under-media-bar">
+              <div class="publication-card_datetime">
+                <p><strong>Publié le {{ moment(post.createdAt).format('DD-MM-YYYY à HH:mm')}}</strong></p>
+              </div>
+              <div class="publication-card_btn">
+                  <fa v-if="
+                  $store.state.user.id === post.User.id ||
+                  $store.state.user.admin === true"
+                  class="publication-card_delete-btn"
+                  icon="trash"
+                  @click="deletePost(post.id)"/>
+              </div>
+            </div>
+            <div class="publication-card_text">
+              <h2>
+                {{ post.title }}
+              </h2>
+              <p>
+                {{ post.message }}
+              </p>
+            </div>
+            <div class="comment"></div>
+          </div>
+          <!--publication_text_end-->
+      </div>
+      <!--Publication_card_END-->
+    </div>
+    <div v-else >
+      <h2>Bienvenue sur le Social Network de Groupomania<br>
+      commencer à partager du contenu</h2>
+    </div>
+   </div> 
   </main> 
 <!--publication_end-->
-  <main v-else >
-    <h2>Bienvenue sur le Social Network de Groupomania<br>
-    commencer à partager du contenu</h2>
-  </main>
-
+  
   <RouterView />
 </template>
 
 
 <script>
 import moment from 'moment'
-import postsCards from '../components/postscard.vue'
 
 export default {
   name: 'home',
-  components: {
-    postsCards,
+  props: {
+    post: {
+      type: Object,
+    },
   },
   data: function (){
         return{
@@ -93,6 +142,9 @@ export default {
     this.$store.dispatch("getPosts");
   },
   methods: {
+    moment: function (date) {
+      return moment(date);
+    },
     async reloadFeed() {
       try {
         const response = await PostService.getPosts();
@@ -102,9 +154,15 @@ export default {
         this.errorMessage = error.response.data.error;
       }
     },
-    moment: function (date) {
-      return moment(date);
+    getProfile(id) {
+      this.$router.push(`/account/${id}`);
     },
+    deletePost(id) {
+      this.$store.dispatch("deletePost", id);
+    },
+    getOnePost(id) {
+      this.$router.push(`posts/${id}`);
+    }
   },
 }
 </script>

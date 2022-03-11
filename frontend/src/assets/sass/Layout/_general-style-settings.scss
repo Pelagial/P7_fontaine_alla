@@ -8,14 +8,13 @@
 /////////////////////////////////////* main_design_(mobile) */
 
 // Global style settings
-main{
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.publication-main_wrapper{
+    @include column-center;
+    margin-top: 10%;
+    width: 100%;
 }
 .publications_wrapper{
-    margin-top: 10%;
-    max-width: 800px;
+    width: 100%;
     @include column-center;
 }
 
@@ -70,7 +69,10 @@ label{
     .header_logo-groupomania{
         display: none;
     }
-    .publications_wrapper{
+    .publication-main_wrapper{
         margin-top: 0;
+    }
+    .publications_wrapper{
+        width: 70%;
     }
 }

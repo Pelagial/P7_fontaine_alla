@@ -8,7 +8,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const path = require('path');
-const helmet = require('helmet'); // sécurisation injection
+const helmet = require('helmet');
 require('dotenv').config();
 
 /** Routes import */
@@ -40,6 +40,12 @@ app.use((req, res, next) => {
 
 /** Helmet config */
 app.use(helmet());
+// Sets "Cross-Origin-Resource-Policy: same-origin"
+app.use(helmet.crossOriginResourcePolicy());
+// Sets "Cross-Origin-Resource-Policy: same-site"
+app.use(helmet.crossOriginResourcePolicy({ policy: "same-site" }));
+// Sets "Cross-Origin-Resource-Policy: cross-origin"
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 
 /** Images static folder */
 app.use('./upload', express.static(path.join(__dirname, './upload')));
