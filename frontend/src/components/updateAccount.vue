@@ -24,7 +24,7 @@
                             <strong>{{ user.pseudo }}</strong>
                         </label>
                         <input
-                            v-model="pseudo"
+                            v-model="newPseudo"
                             type="text"
                             placeholder="Enter New Pseudo"
                             name="Pseudo"
@@ -37,7 +37,7 @@
                             </strong>
                         </label>
                         <textarea
-                            v-model="bio"
+                            v-model="newBio"
                             class="profile_update-bio"
                             type="text"
                             rows="3"
@@ -46,7 +46,7 @@
                         />
                     </div>
                     <span class="alert_message" v-html="errorMessage" />
-                    <span class="alert-message" v-html="message" />
+                    <span class="alert_message" v-html="message" />
                     <button
                         class="publication-button"
                         type="submit"
@@ -60,13 +60,13 @@
 
 <script>
 export default {
-    name: 'updateProfile',
+    name: 'updateAccount',
     data() {
         return {
-            photo: '',
-            pseudo: '',
-            bio: '',
-            messageRetour: null,
+            file: "",
+            newPseudo: "",
+            newBio: "",
+            message: null,
             errorMessage: null,
         }
     },
@@ -111,7 +111,6 @@ export default {
             this.$store.dispatch("getUserById", this.user.id);
             this.$store.dispatch("updateAccount", formData);
             this.$store.dispatch("getUserById", this.user.id);
-            this.$router.push('/account')
         },
     }
 }

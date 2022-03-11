@@ -1,16 +1,20 @@
 <template>
   <div class="profile">
-    <header class="profile_header">
+    <header v-if="mode == 'account'" class="profile_header">
       <RouterLink to="/home">
         <fa class="profile_header-home" icon="arrow-left" />
       </RouterLink>
+      <h1 class="profile_header-user-name">{{ user.pseudo }}</h1>
+    </header>
+    <header v-else class="profile_header">
+        <fa @click="reloadPage" class="profile_header-home" icon="arrow-left" />
       <h1 class="profile_header-user-name">{{ user.pseudo }}</h1>
     </header>
     <main v-if="mode == 'account'">
       <div class="profile_wrapper">
         <div class="profile-content">
           <div class="profile_user-img">
-            <img v-if="user.photo" :src="user.pseudo" alt="Photo de profil de l'utilisateur" />
+            <img v-if="user.photo" :src="user.photo" alt="Photo de profil de l'utilisateur" />
             <fa v-else="user.photo === null" class="default_userIcon" icon="circle-user"></fa>          
           </div>
           <div class="profile_user-infos">
@@ -31,13 +35,7 @@
             <fa @click.prevent="update()" class="profile_user-action-update" icon="pen-to-square" />
             <fa class="profile_user-action-logout" icon="arrow-right-to-bracket" @click="logout" />
             <fa class="profile_user-action-delete" icon="trash-can" @click="deleteAccount(user.id)" />
-          </div>
-
-          <div class="profile_user-publications">
-          <h2>Mes publications</h2>
-              <userPostCard/>
-          </div>
-          
+          </div>          
         </div>
       </div>
     </main>
@@ -49,7 +47,6 @@
 
 <script>
 import updateAccount from '../components/updateAccount.vue'
-import userPostCard from '../components/userPostCard.vue'
 
 export default {
   name: 'account',
@@ -59,8 +56,7 @@ export default {
         }
   },
   components: {
-        updateAccount,
-        userPostCard
+        updateAccount
   },
   computed: {
     user() {
@@ -79,8 +75,11 @@ export default {
     this.$store.dispatch("getUserById");
   },
   methods: {
+    reloadPage() {
+      this.$router.go();
+    },
     getBackHome() {
-      this.$router.replace("/");
+      this.$router.push('/');
     },
     update() {
       this.mode='updateAccount';

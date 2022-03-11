@@ -5,10 +5,10 @@
       <fa class="publication-home" icon="arrow-left" />
     </RouterLink>
     <div class="publication-header_user-profile">
-              <h1 class="publication-header_user-name">{{ user.username }}</h1>
+              <h1 class="publication-header_user-name">{{ user.pseudo }}</h1>
               <div class="publication-header_user-img">
-                <img v-if="user.imageUrl" class="user_img" :src="user.imageUrl" alt="Photo de profil de l'utilisateur" />
-                <fa v-else="user.imageUrl === null" class="default_userIcon" icon="circle-user"></fa>
+                <img v-if="user.photo" class="user_img" :src="user.photo" alt="Photo de profil de l'utilisateur" />
+                <fa v-else="user.photo === null" class="default_userIcon" icon="circle-user"></fa>
               </div>
             </div>
   </header>
@@ -24,13 +24,13 @@
           </label>
           <img class="media_upload_preview" src="" />
           <input
-            @change.prevent="uploadImage()"
+            @change.prevent="uploadImage"
             class="publication_content-media"
             type="file"
             accept="image/png, image/jpeg,
             image/bmp, image/gif"
-            ref="imageUrl"
-            name="imageUrl"
+            ref="file"
+            name="file"
           />
         </div>
         <div class="publication_content-text-content">
@@ -50,13 +50,10 @@
             name="message"
           />
         </div>
-        <span v-if="status == 'error_posting'">
-                    Titre ou message trop cours<br>
-                    (Le titre doit avoir minimum 3 caractères<br>
-                    et le message doit en contenir minimum 5.)
-        </span>
+        <div class="danger-alert" v-html="errorMessage" />
+        <div class="danger-alert" v-html="messageRetour" />
       </div>
-      <button @click.prevent="createPost()" type="submit" :class="{ 'button--disabled' : !validatedFields }" :disabled="!validatedFields">partager</button>
+      <button @click="onSubmit" type="submit" :class="{ 'button--disabled' : !validatedFields }" :disabled="!validatedFields">partager</button>
     </form>
   </div>
   <!--Publication_formular_end-->
@@ -70,51 +67,56 @@ export default {
   data: function (){
         return{
             mode:'post',
-            imageUrl:'',
+            file: '',
             title:'',
             message:''
         }
   },
-  mounted: function () {
-    if (this.$store.state.user.userId == -1) {
-      this.$router.push('/');
-      return;
-    };
-    this.$store.dispatch('getUserInfos');
-  },
   computed: {
-    validatedFields(){
-            if (this.mode =='publication') {
-                if(this.title != "" && this.message != "") {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
+    user() {
+      return this.$store.getters.user;
     },
-    ...mapState({
-      status: 'status',
-      user: 'userInfos'
-    })
+    validatedFields(){
+      if(this.title != '' && this.file != '' && this.message != '' ) {
+          return true;
+      } else {
+          return false;
+      }
+    },
+    messageRetour() {
+      return this.$store.getters.message;
+    },
+    errorMessage() {
+      return this.$store.getters.error;
+    },
+  },
+  beforeMount() {
+    this.$store.dispatch("getUserById");
   },
   methods: {
     uploadImage() {
-            const preview = document.querySelector('.media_upload_preview');
-            const reader = new FileReader();
-            const imageUrlPrev = reader.readAsDataURL(this.$refs.imageUrl.files[0]);
-            reader.addEventListener("load", function () {
-                // on convertit l'image en une chaîne de caractères base64
-                preview.src = reader.result;
-            }, false);
+        const preview = document.querySelector('.media_upload_preview');
+        const reader = new FileReader();
+        const file = this.$refs.file.files[0];
+        reader.readAsDataURL(file);
+        reader.addEventListener('load', function () {
+        // we convert image in string base64
+          preview.src = reader.result;
+        }, false);
+        this.file = file;
+        console.log(this.file);
     },
-    createPost(){
-            const file = this.$refs.imageUrl.files[0];
-            this.$store.dispatch('createPost', {
-              message: this.message,
-              title: this.title,
-              imageUrl: file
-            }),
-            this.$router.push('home');
+    onSubmit() {
+      const formData = new FormData();
+      formData.append('message', this.message);
+      if (this.title !== null) {
+        formData.append('title', this.title);
+      }
+      if (this.file !== null) {
+        formData.append('image', this.file);
+      }
+      this.$store.dispatch("createPost", formData);
+      this.$router.push('/home');
     },
   }
 }

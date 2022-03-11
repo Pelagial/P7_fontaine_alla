@@ -47,59 +47,15 @@
 <!--nav_bar_end-->
 
 <!--publication-->
-  <main v-if="publication != null">
-    <div class="publications_wrapper">
-      <!--Publication_card-->
-      <div class="publication-card" v-for="publication of publications" :key="publication.id" :id="publication.id">
-
-          <!--user_profil_info--> 
-            <div class="publication-card_user-profile">
-              <h2 class="publication-card_user-name">{{ publication.User.pseudo }}</h2>
-              <div class="publication-card_user-img">
-                <img v-if="publication.User.photo" :src="publication.User.photo" alt="Photo de profil de l'utilisateur"/>
-                <fa v-else="user.photo === null" class="default_userIcon" icon="circle-user"></fa>
-              </div>
-            </div>
-          <!--user_profil_info_end-->
-
-          <!--publication_media-->
-          <div class="publication-card_media-upload">
-            <img
-              class="publication_media"
-              :src="publication.photo"
-              alt="media partager par l'utilisateur {{ user.pseudo }}"
-              @dblclick="like()"
-            />
-          </div>
-          <!--publication_media_end-->
-          <!--publication_text-->
-          <div class="publication-card_infos">
-            <div class="publication-card_under-media-bar">
-              <div class="publication-card_datetime">
-                <p><strong>Publié le {{ moment(publication.createdAt).format('DD-MM-YYYY à HH:mm')}}</strong></p>
-                <p v-if="publication.likes > 2">likes</p>
-                <p v-else >O like</p> 
-              </div>
-              <div class="publication-card_btn">
-                <fa v-if="mode === 'publicationLike'" class="publication-card_like-btn" icon="heart" @click.prevent="unLike" />
-                <fa v-else="mode === 'publicationNotLike'" class="liked publication-card_like-btn" :icon="['far', 'heart']" @click.self="like()"/>
-              </div>
-            </div>
-            <div class="publication-card_text">
-              <h2>
-                {{ publication.title }}
-              </h2>
-              <p>
-                {{ publication.message }}
-              </p>
-            </div>
-            <div class="comment"></div>
-          </div>
-          <!--publication_text_end-->
-      </div>
-      <!--Publication_card_END-->
-    </div>
-  </main>
+  <main v-if="post != null">
+      <postsCards
+      v-for="post of posts"
+      :key="post.id"
+      :post="post"
+      :id="post.id"
+      @deletePost="deletePost(post.id)"
+      />
+  </main> 
 <!--publication_end-->
   <main v-else >
     <h2>Bienvenue sur le Social Network de Groupomania<br>
@@ -111,11 +67,14 @@
 
 
 <script>
-import { mapState } from 'vuex'
 import moment from 'moment'
+import postsCards from '../components/postscard.vue'
 
 export default {
   name: 'home',
+  components: {
+    postsCards,
+  },
   data: function (){
         return{
             mode:'home',
@@ -125,16 +84,23 @@ export default {
     user() {
       return this.$store.getters.user;
     },
+    posts() {
+      return this.$store.getters.posts;
+    },
   },
   beforeMount() {
     this.$store.dispatch("getUserById");
+    this.$store.dispatch("getPosts");
   },
   methods: {
-    like() {
-      this.mode='publicationLike';
-    },
-    unLike() {
-      this.mode='publicationNotLike';
+    async reloadFeed() {
+      try {
+        const response = await PostService.getPosts();
+        console.log(response.data);
+        this.posts = response.data;
+      } catch (error) {
+        this.errorMessage = error.response.data.error;
+      }
     },
     moment: function (date) {
       return moment(date);

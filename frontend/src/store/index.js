@@ -11,18 +11,16 @@ const store = createStore({
   strict: true,
   state: {
     status:'',
-    user: {},
-    users: [],
     token: null,
+    user: {},
     isLoggedIn: false,
     isLoading: false,
+
+    posts: [],
+    users: [],
+    post: {},
     message: "",
     error: "",
-
-    publication:{},
-    publications:[],
-    userPublication:{},
-    userPublications:[],
   },
   plugins: [createPersistedState({
     storage: window.sessionStorage,
@@ -95,22 +93,24 @@ const store = createStore({
     },
     // end users
 
-    publication: function(state, publication) {
-      state.publication = publication;
-    },
-    publications: function(state, publications) {
-      state.publications = publications;
-    },
-    userPublication: function(state, userPublication) {
-      state.userPublication = userPublication;
-    },
-    userPublications: function(state, userPublications) {
-      state.userPublications = userPublications;
-    },
-    publicationId: function(state, publicationId){
-      state.publication.id = publicationId;
-    }
+    // posts
 
+    get_posts(state, posts) {
+      (state.posts = posts), (state.isLoading = false);
+    },
+    get_posts_by_id(state, post) {
+      state.post = post;
+      state.isLoading = false;
+    },
+    add_post(state, post) {
+      state.posts = [post, ...state.posts];
+      state.message = "post créé";
+    },
+    delete_post(state, id) {
+      state.posts = [...state.posts.filter((element) => element.id !== id)];
+      state.message = "post supprimé";
+    },
+    // end posts
   },
   actions: {
     //users
@@ -147,7 +147,7 @@ const store = createStore({
     updateAccount({ commit }, data) {
       let id = this.state.user.id;
       axios
-        .put(`${Api}.users/accounts/${id}`, data, {
+        .put(`http://localhost:5000/api/users/accounts/${id}`, data, {
           headers: { Authorization: this.state.token },
         })
         .then((response) => {
@@ -162,6 +162,46 @@ const store = createStore({
       })
     },
     // end users
+
+    //posts
+    getPosts({ commit }) {
+      PostService.getPosts().then((response) => {
+        const posts = response.data;
+        commit('get_posts', posts);
+      });
+    },
+    getPostById({ commit }, id) {
+      PostService.getPostById(id).then((response) => {
+        const post = response.data;
+        commit('get_posts_by_id', post);
+      });
+    },
+    createPost({ commit }, post) {
+      PostService.createPost(post)
+        .then((response) => {
+          const post = response.data;
+          commit('add_post', post);
+        })
+        .then(() => {
+          PostService.getPosts().then((response) => {
+            const posts = response.data;
+            commit('get_posts', posts);
+          });
+        });
+    },
+    deletePost({ commit }, id) {
+      PostService.deletePost(id)
+        .then(() => {
+          commit('delete_posts', id);
+        })
+        .then(() => {
+          PostService.getPosts().then((response) => {
+            const posts = response.data;
+            commit('get_posts', posts);
+          });
+        });
+    },
+    // end posts
   }
 })
 

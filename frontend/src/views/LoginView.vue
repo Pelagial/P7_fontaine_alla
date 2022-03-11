@@ -55,7 +55,7 @@
                 <label for="password"><strong>Password</strong></label>
                 <input v-model="password" type="password" placeholder="Enter Password" name="password" required>
                 <span class="alert_message" v-html="errorMessage" />
-                <span class="alert-message" v-html="message" />
+                <span class="alert_message" v-html="message" />
             </div>
             <button @click.prevent="login()" type="submit" :class="{ 'button--disabled' : !validatedFields }" :disabled="!validatedFields"><strong>
                 <p>LOGIN</p>

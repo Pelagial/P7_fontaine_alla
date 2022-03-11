@@ -6,6 +6,8 @@
 const http = require('http');
 /** Import app */
 const app = require('./app');
+const db = require("./models/index");
+require("dotenv").config();
 
 /** send back a valid PORT no matters is origin form */
 const normalizePort = val => {
@@ -46,12 +48,15 @@ const errorHandler = error => {
 /** Create the server */
 const server = http.createServer(app);
 
-server.on('error', errorHandler);
-server.on('listening', () => {
-  const address = server.address();
-  const bind = typeof address === 'string' ? 'pipe ' + address : 'port ' + port;
-  console.log('Listening on ' + bind);
+db.sequelize.sync().then(function () {
+  server.on("error", errorHandler);
+  server.on("listening", () => {
+    const address = server.address();
+    const bind =
+      typeof address === "string" ? "pipe " + address : "port " + port;
+    console.log("Listening on " + bind);
+  });
+  /** Listen the server */
+  server.listen(port);
+  require("./config/admin");
 });
-
-/** Listen the server */
-server.listen(port);
