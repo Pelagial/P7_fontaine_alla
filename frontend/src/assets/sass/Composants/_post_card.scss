@@ -7,7 +7,7 @@
 
 /////////////////////////////////////* main_design_(mobile) */
 
-.publication-card{
+.post-card{
         @include card-color;
         width: 100%;
         height: 30%;
@@ -74,7 +74,7 @@
 /////////////////////*responsive_desktop*/
 
 @media only screen and (min-width: 1024px) {
-  .publication-card{
+  .post-card{
     &_datetime{
       margin-left: -20%;
     }

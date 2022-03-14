@@ -1,31 +1,31 @@
 <template>
-  <!--Publication_header-->
-  <header class="publication-header">
+  <!--Post_header-->
+  <header class="post-header">
     <RouterLink to="/home">
-      <fa class="publication-home" icon="arrow-left" />
+      <fa class="post-home" icon="arrow-left" />
     </RouterLink>
-    <div class="publication-header_user-profile">
-              <h1 class="publication-header_user-name">{{ user.pseudo }}</h1>
-              <div class="publication-header_user-img">
+    <div class="post-header_user-profile">
+              <h1 class="post-header_user-name">{{ user.pseudo }}</h1>
+              <div class="post-header_user-img">
                 <img v-if="user.photo" class="user_img" :src="user.photo" alt="Photo de profil de l'utilisateur" />
                 <fa v-else="user.photo === null" class="default_userIcon" icon="circle-user"></fa>
               </div>
             </div>
   </header>
-  <!--Publication_header_end-->
+  <!--Post_header_end-->
 
-  <!--Publication_formular-->
-  <div class="publication_formular">
-    <form class="publication">
-      <div class="publication_content">
-        <div class="publication_content-media-upload">
+  <!--Post_formular-->
+  <div class="post_formular">
+    <form class="post">
+      <div class="post_content">
+        <div class="post_content-media-upload">
           <label for="imageUrl">
             <strong>Choisi un media à partager</strong>
           </label>
           <img class="media_upload_preview" src="" />
           <input
             @change.prevent="uploadImage"
-            class="publication_content-media"
+            class="post_content-media"
             type="file"
             accept="image/png, image/jpeg,
             image/bmp, image/gif"
@@ -33,7 +33,7 @@
             name="file"
           />
         </div>
-        <div class="publication_content-text-content">
+        <div class="post_content-text-content">
           <label for="title">
             <strong>Titre</strong>
           </label>
@@ -43,7 +43,7 @@
           </label>
           <textarea
             v-model="message"
-            class="publication_content-text"
+            class="post_content-text"
             type="text"
             rows="3"
             placeholder="Entrer votre commentaire"
@@ -56,7 +56,7 @@
       <button @click="onSubmit" type="submit" :class="{ 'button--disabled' : !validatedFields }" :disabled="!validatedFields">partager</button>
     </form>
   </div>
-  <!--Publication_formular_end-->
+  <!--Post_formular_end-->
 </template>
 
 <script>

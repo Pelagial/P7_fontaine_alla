@@ -27,7 +27,7 @@
                             v-model="newPseudo"
                             type="text"
                             placeholder="Enter New Pseudo"
-                            name="Pseudo"
+                            name="newPseudo"
                         />
                         <label for="bio">
                             <strong>
@@ -42,13 +42,13 @@
                             type="text"
                             rows="3"
                             placeholder="Enter  Your Bio"
-                            name="bio"
+                            name="newBio"
                         />
                     </div>
                     <span class="alert_message" v-html="errorMessage" />
                     <span class="alert_message" v-html="message" />
                     <button
-                        class="publication-button"
+                        class="post-button"
                         type="submit"
                         @click.prevent="updateAccount(user.id)"
                     >MODIFIER LE PROFIL</button>

@@ -46,49 +46,49 @@
   </nav>
 <!--nav_bar_end-->
 
-<!--publication-->
+<!--post-->
   <main>
-    <div class="publication-main_wrapper">
-      <div v-if="posts != null" class="publications_wrapper" v-for='post of posts'>
+    <div class="post-main_wrapper">
+      <div v-if="posts != null" class="posts_wrapper" v-for='post of posts'>
       <!--Publication_card-->
-      <div class="publication-card">
+      <div class="post-card">
 
           <!--user_profil_info--> 
-            <div class="publication-card_user-profile">
-              <h2 class="publication-card_user-name">{{ post.User.pseudo }}</h2>
-              <div class="publication-card_user-img">
+            <div class="post-card_user-profile">
+              <h2 class="post-card_user-name">{{ post.User.pseudo }}</h2>
+              <div class="post-card_user-img">
                 <img v-if="post.User.photo" :src="post.User.photo" alt="Photo de profil de l'utilisateur"/>
                 <fa v-else="user.photo === null" class="default_userIcon" icon="circle-user"></fa>
               </div>
             </div>
           <!--user_profil_info_end-->
 
-          <!--publication_media-->
-          <div class="publication-card_media-upload">
+          <!--post_media-->
+          <div class="post-card_media-upload">
             <img
-              class="publication_media"
+              class="post_media"
               :src="post.imageUrl"
               alt="image postée par l'utilisateur"
               @dblclick="like()"
             />
           </div>
-          <!--publication_media_end-->
-          <!--publication_text-->
-          <div class="publication-card_infos">
-            <div class="publication-card_under-media-bar">
-              <div class="publication-card_datetime">
+          <!--post_media_end-->
+          <!--post_text-->
+          <div class="post-card_infos">
+            <div class="post-card_under-media-bar">
+              <div class="post-card_datetime">
                 <p><strong>Publié le {{ moment(post.createdAt).format('DD-MM-YYYY à HH:mm')}}</strong></p>
               </div>
-              <div class="publication-card_btn">
+              <div class="post-card_btn">
                   <fa v-if="
                   $store.state.user.id === post.User.id ||
                   $store.state.user.admin === true"
-                  class="publication-card_delete-btn"
+                  class="post-card_delete-btn"
                   icon="trash"
-                  @click="deletePost(post.id)"/>
+                  @click.prevent="deletePost(post.id)"/>
               </div>
             </div>
-            <div class="publication-card_text">
+            <div class="post-card_text">
               <h2>
                 {{ post.title }}
               </h2>
@@ -98,9 +98,9 @@
             </div>
             <div class="comment"></div>
           </div>
-          <!--publication_text_end-->
+          <!--post_text_end-->
       </div>
-      <!--Publication_card_END-->
+      <!--post_card_END-->
     </div>
     <div v-else >
       <h2>Bienvenue sur le Social Network de Groupomania<br>
@@ -108,7 +108,7 @@
     </div>
    </div> 
   </main> 
-<!--publication_end-->
+<!--post_end-->
   
   <RouterView />
 </template>
@@ -119,11 +119,6 @@ import moment from 'moment'
 
 export default {
   name: 'home',
-  props: {
-    post: {
-      type: Object,
-    },
-  },
   data: function (){
         return{
             mode:'home',
@@ -138,27 +133,15 @@ export default {
     },
   },
   beforeMount() {
-    this.$store.dispatch("getUserById");
     this.$store.dispatch("getPosts");
   },
   methods: {
     moment: function (date) {
       return moment(date);
     },
-    async reloadFeed() {
-      try {
-        const response = await PostService.getPosts();
-        console.log(response.data);
-        this.posts = response.data;
-      } catch (error) {
-        this.errorMessage = error.response.data.error;
-      }
-    },
-    getProfile(id) {
-      this.$router.push(`/account/${id}`);
-    },
     deletePost(id) {
-      this.$store.dispatch("deletePost", id);
+      this.$store.dispatch("deletePost", id)
+      .then(location.reload())
     },
     getOnePost(id) {
       this.$router.push(`posts/${id}`);

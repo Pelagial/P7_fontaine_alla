@@ -100,7 +100,6 @@ exports.getAllPosts = async (req, res) => {
 exports.getOnePost = async (req, res) => {
   try {
     const post = await db.Post.findOne({
-      // on récupère le post avec l'id fourni en incluant les tables et attributs nécessaires
       where: { id: req.params.id },
       include: [
         {

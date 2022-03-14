@@ -191,7 +191,7 @@ const store = createStore({
     deletePost({ commit }, id) {
       PostService.deletePost(id)
         .then(() => {
-          commit('delete_posts', id);
+          commit('delete_post', id);
         })
         .then(() => {
           PostService.getPosts().then((response) => {
