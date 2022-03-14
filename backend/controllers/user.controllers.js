@@ -23,7 +23,7 @@ exports.signup = async (req, res) => {
     });
     if (user !== null) {
       if (user.pseudo === req.body.pseudo) {
-        return res.status(400).json({ error: "ce pseudo est déjà utilisé" });
+        return res.status(400).json({ error: "Ce pseudo est déjà utilisé" });
       }
     } else {
       const hash = await bcrypt.hash(req.body.password, 10);
@@ -52,7 +52,7 @@ exports.login = async (req, res) => {
   try {
     const user = await db.User.findOne({
       where: { email: req.body.email },
-    }); // on vérifie que l'adresse mail figure bien dan la bdd
+    });
     if (user === null) {
       return res.status(403).send({ error: "Connexion échouée" });
     } else {
@@ -62,7 +62,6 @@ exports.login = async (req, res) => {
       } else {
         const tokenObject = await token.issueJWT(user);
         res.status(200).send({
-          // on renvoie le user et le token
           user: user,
           token: tokenObject.token,
           sub: tokenObject.sub,
@@ -78,7 +77,6 @@ exports.login = async (req, res) => {
 
 /** getOneAccount ctrl */
 exports.getAccount = async (req, res) => {
-  // on trouve l'utilisateur et on renvoie l'objet user
   try {
     const user = await db.User.findOne({
       where: { id: req.params.id },
@@ -89,9 +87,8 @@ exports.getAccount = async (req, res) => {
   }
 };
 
-/** getAllAccount ctrl */
+/** getAllAccount (except admin account) ctrl */
 exports.getAllUsers = async (req, res) => {
-  // on envoie tous les users sauf admin
   try {
     const users = await db.User.findAll({
       attributes: ["pseudo", "id", "photo", "bio", "email"],
@@ -109,7 +106,6 @@ exports.getAllUsers = async (req, res) => {
 
 /** updateAccount ctrl */
 exports.updateAccount = async (req, res) => {
-  // modifier le profil
   const id = req.params.id;
   try {
     const userId = token.getUserId(req);
@@ -117,21 +113,18 @@ exports.updateAccount = async (req, res) => {
     let user = await db.User.findOne({ where: { id: id } }); // on trouve le user
     if (userId === user.id) {
       if (req.file && user.photo) {
-        newPhoto = `${req.protocol}://${req.get("host")}/api/upload/${
+        newPhoto = `${req.protocol}://${req.get("host")}/backend/upload/${
           req.file.filename
         }`;
         const filename = user.photo.split("/upload")[1];
         fs.unlink(`upload/${filename}`, (err) => {
-          // s'il y avait déjà une photo on la supprime
           if (err) console.log(err);
           else {
             console.log(`Deleted file: upload/${filename}`);
           }
         });
       } else if (req.file) {
-        newPhoto = `${req.protocol}://${req.get("host")}/api/upload/${
-          req.file.filename
-        }`;
+        newPhoto = `${req.protocol}://${req.get("host")}/backend/upload/${req.file.filename}`;
       }
       if (newPhoto) {
         user.photo = newPhoto;
@@ -167,11 +160,11 @@ exports.deleteAccount = async (req, res) => {
       fs.unlink(`upload/${filename}`, () => {
         // sil' y a une photo on la supprime et on supprime le compte
         db.User.destroy({ where: { id: id } });
-        res.status(200).json({ messageRetour: "utilisateur supprimé" });
+        res.status(200).json({ messageRetour: "Utilisateur supprimé" });
       });
     } else {
       db.User.destroy({ where: { id: id } }); // on supprime le compte
-      res.status(200).json({ messageRetour: "utilisateur supprimé" });
+      res.status(200).json({ messageRetour: "Utilisateur supprimé" });
     }
   } catch (error) {
     return res.status(500).send({ error: "Erreur serveur" });

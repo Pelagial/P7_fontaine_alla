@@ -3,7 +3,7 @@
 
 ## Installation ##
 
-Here are the dependancies you need to install:
+Here is the config to use:
 - NodeJS 12.14 or 14.0.
 - Nodemon 2.0.15
 
@@ -14,5 +14,5 @@ Here are the dependancies you need to install:
 - Run nodemon 
 (You should see in your terminal
 Listening on port 'your .env PORT'
-Mysql DB connected !
+and { message: "l'admin est déjà créé" }
 If there is any probleme check your dependencies)

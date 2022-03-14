@@ -23,7 +23,7 @@ exports.createPost = async (req, res) => {
     });
     if (user !== null) {
       if (req.file) {
-        imageUrl = `${req.protocol}://${req.get("host")}/upload/${req.file.filename}`;
+        imageUrl = `${req.protocol}://${req.get("host")}/backend/upload/${req.file.filename}`;
       } else {
         imageUrl = null;
       }

@@ -146,7 +146,7 @@ const store = createStore({
     updateAccount({ commit }, data) {
       let id = this.state.user.id;
       axios
-        .put(`http://localhost:5000/api/users/accounts/${id}`, data, {
+        .put(`${process.env.VUE_APP_API_ENDPOINT}/users/accounts/${id}`, data, {
           headers: { Authorization: this.state.token },
         })
         .then((response) => {

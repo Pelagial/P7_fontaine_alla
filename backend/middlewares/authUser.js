@@ -1,23 +1,23 @@
+/**
+* AUTHUSER MIDDLEWARE SETTINGS ***********************************************************************************
+*/
+
+/** IMPORT ***********************************************/
+
+/** General import */
 const emailValidator = require("email-validator");
 const passwordValidator = require("password-validator");
 
+/** EXPORT ***********************************************/
 exports.valid = (req, res, next) => {
-  // on vérifie le password et l'email
+  // check if password and email is valid
   const passwordSchema = new passwordValidator();
   passwordSchema
-    .is()
-    .min(8) // Minimum length 8
-    .is()
-    .max(20) // Maximum length 20
-    .has()
-    .uppercase() // Must have uppercase letters
-    .has()
-    .lowercase() // Must have lowercase letters
-    .has()
-    .not()
-    .symbols(); // Has no symbols
-  //.has().not().spaces()
-  // Should not have spaces is a wrong rule to apply
+    .is().min(8) // Minimum length 8
+    .is().max(20) // Maximum length 20
+    .has().uppercase() // Must have uppercase letters
+    .has().lowercase() // Must have lowercase letters
+    .has().not().symbols(); // Has no symbols
 
   if (
     !emailValidator.validate(req.body.email) ||
@@ -25,7 +25,7 @@ exports.valid = (req, res, next) => {
   ) {
     return res.status(400).send({
       error:
-        "Merci de vérifier ton adresse mail, ton mot de passe doit contenir au minimum 8 lettres avec des minuscules et majuscules  ",
+        "Merci de vérifier votre adresse mail, votre mot de passe doit contenir au minimum 8 lettres avec des minuscules et majuscules  ",
     });
   } else if (
     emailValidator.validate(req.body.email) ||
@@ -35,7 +35,7 @@ exports.valid = (req, res, next) => {
   }
 };
 exports.checkPseudo = (req, res, next) => {
-  // on vérifie le pseudo
+  // check if pseudo is valid
   const regex = /^[a-zA-Z0-9_]{3,30}$/; // Lettres, espaces et doit être entre 4 et 30 caractères
   const pseudo = req.body.pseudo;
   if (regex.test(pseudo) === true) {

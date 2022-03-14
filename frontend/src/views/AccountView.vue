@@ -33,7 +33,7 @@
           
           <div class="profile_user-action">
             <fa @click.prevent="update()" class="profile_user-action-update" icon="pen-to-square" />
-            <fa class="profile_user-action-logout" icon="arrow-right-to-bracket" @click="logout" />
+            <fa class="profile_user-action-logout" icon="arrow-right-to-bracket" @click.stop="logout" />
             <fa class="profile_user-action-delete" icon="trash-can" @click="deleteAccount(user.id)" />
           </div>          
         </div>
