@@ -113,9 +113,7 @@ exports.updateAccount = async (req, res) => {
     let user = await db.User.findOne({ where: { id: id } }); // on trouve le user
     if (userId === user.id) {
       if (req.file && user.photo) {
-        newPhoto = `${req.protocol}://${req.get("host")}/backend/upload/${
-          req.file.filename
-        }`;
+        newPhoto = `${req.protocol}://${req.get("host")}/api/upload/${req.file.filename}`;
         const filename = user.photo.split("/upload")[1];
         fs.unlink(`upload/${filename}`, (err) => {
           if (err) console.log(err);
@@ -124,7 +122,7 @@ exports.updateAccount = async (req, res) => {
           }
         });
       } else if (req.file) {
-        newPhoto = `${req.protocol}://${req.get("host")}/backend/upload/${req.file.filename}`;
+        newPhoto = `${req.protocol}://${req.get("host")}/api/upload/${req.file.filename}`;
       }
       if (newPhoto) {
         user.photo = newPhoto;
