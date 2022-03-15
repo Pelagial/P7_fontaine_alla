@@ -48,7 +48,7 @@ app.use(helmet.crossOriginResourcePolicy({ policy: "same-site" }));
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 
 /** Images static folder */
-app.use('./upload', express.static(path.join(__dirname, './upload')));
+app.use('/api/upload', express.static(path.join(__dirname, './upload')));
 
 /** Routes use */
 app.use('/api/users', userRoutes);

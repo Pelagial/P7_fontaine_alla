@@ -104,7 +104,6 @@ export default {
           preview.src = reader.result;
         }, false);
         this.file = file;
-        console.log(this.file);
     },
     onSubmit() {
       const formData = new FormData();

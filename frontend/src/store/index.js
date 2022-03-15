@@ -93,7 +93,6 @@ const store = createStore({
     // end users
 
     // posts
-
     get_posts(state, posts) {
       (state.posts = posts), (state.isLoading = false);
     },

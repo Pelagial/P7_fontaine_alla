@@ -1,64 +1,22 @@
 <template>
 <!--header-->
-  <header>
-    <div class="header_logo-groupomania">
-      <img alt="Logo de Groupomania" class="logo" src="@/assets/images/logos/logo-black.png" />
-    </div>
-  </header>
+   <headerPage/>
 <!--header_end-->
-
-<!--nav_bar_header-->
-  <nav class="nav-bar-header_wrapper">
-      <div class="nav-bar-header_logo-groupomania">
-        <img alt="Logo de Groupomania" class="logo" src="../assets/images/logos/logo-black.png" />
-      </div>
-      <div class="nav-bar-header_menu">
-        <RouterLink to="/home">
-        <fa class="nav-bar-header_home" icon="house" />
-      </RouterLink>
-      <RouterLink to="/Post">
-        <fa class="nav-bar-header_add-post" icon="circle-plus" />
-      </RouterLink>
-      <RouterLink to="/account">
-        <div class="nav-bar-header_user-profile">
-          <img v-if="user.photo" class="user_img" :src="user.photo" alt="Photo de profil de l'utilisateur" />
-          <fa v-else="user.photo === null" class="default_userIcon" icon="circle-user"></fa>
-        </div>
-      </RouterLink>
-      </div>
-    </nav>
-<!--nav_bar_header_end-->
-
-<!--nav_bar_bottom-->
-  <nav class="nav-bar_wrapper">
-    <RouterLink to="/home">
-      <fa class="nav-bar_home" icon="house" />
-    </RouterLink>
-    <RouterLink to="/post">
-      <fa class="nav-bar_add-post" icon="circle-plus" />
-    </RouterLink>
-    <RouterLink to="/account">
-      <div class="nav-bar_user-profile">
-        <img v-if="user.photo != null" class="user_img" :src="user.photo" alt="Photo de profil de {{ user.pseudo }}" />
-        <fa v-else class="default_userIcon" icon="circle-user"></fa>
-      </div>
-    </RouterLink>
-  </nav>
-<!--nav_bar_end-->
 
 <!--post-->
   <main>
-    <div class="post-main_wrapper">
-      <div v-if="posts != null" class="posts_wrapper" v-for='post of posts'>
+<!--if_there_is_post-->
+    <div v-if="posts != []" class="post-main_wrapper">
+      <div  class="posts_wrapper" v-for='post of posts'>
       <!--Publication_card-->
       <div class="post-card">
 
           <!--user_profil_info--> 
             <div class="post-card_user-profile">
-              <h2 class="post-card_user-name">{{ post.User.pseudo }}</h2>
+              <h2 class="post-card_user-name">{{ }}</h2>
               <div class="post-card_user-img">
                 <img v-if="post.User.photo" :src="post.User.photo" alt="Photo de profil de l'utilisateur"/>
-                <fa v-else="user.photo === null" class="default_userIcon" icon="circle-user"></fa>
+                <fa v-else="post.User.photo === null" class="default_userIcon" icon="circle-user"></fa>
               </div>
             </div>
           <!--user_profil_info_end-->
@@ -102,11 +60,14 @@
       </div>
       <!--post_card_END-->
     </div>
-    <div v-else >
+   </div> 
+<!--if_there_is_post_end-->
+<!--if_there_is_no_post-->
+    <div v-else>
       <h2>Bienvenue sur le Social Network de Groupomania<br>
       commencer à partager du contenu</h2>
     </div>
-   </div> 
+<!--if_there_is_no_post_end-->
   </main> 
 <!--post_end-->
   
@@ -115,6 +76,7 @@
 
 
 <script>
+import headerPage from '../components/headerPage.vue'
 import moment from 'moment'
 
 export default {
@@ -124,10 +86,10 @@ export default {
             mode:'home',
         }
   },
+  components: {
+        headerPage
+  },
   computed: {
-    user() {
-      return this.$store.getters.user;
-    },
     posts() {
       return this.$store.getters.posts;
     },
@@ -142,9 +104,6 @@ export default {
     deletePost(id) {
       this.$store.dispatch("deletePost", id)
       .then(location.reload())
-    },
-    getOnePost(id) {
-      this.$router.push(`posts/${id}`);
     }
   },
 }
