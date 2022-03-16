@@ -13,7 +13,7 @@
 
           <!--user_profil_info--> 
             <div class="post-card_user-profile">
-              <h2 class="post-card_user-name">{{ }}</h2>
+              <h2 class="post-card_user-name">{{ post.User.pseudo }}</h2>
               <div class="post-card_user-img">
                 <img v-if="post.User.photo" :src="post.User.photo" alt="Photo de profil de l'utilisateur"/>
                 <fa v-else="post.User.photo === null" class="default_userIcon" icon="circle-user"></fa>

@@ -76,7 +76,7 @@ export default {
   },
   methods: {
     reloadPage() {
-      this.$router.go();
+      location.reload();
     },
     getBackHome() {
       this.$router.push('/');

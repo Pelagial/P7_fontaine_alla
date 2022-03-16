@@ -111,6 +111,9 @@ export default {
             this.$store.dispatch("getUserById", this.user.id);
             this.$store.dispatch("updateAccount", formData);
             this.$store.dispatch("getUserById", this.user.id);
+            setTimeout(() => {
+                location.reload();
+            }, 2000);
         },
     }
 }

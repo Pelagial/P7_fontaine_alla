@@ -135,7 +135,7 @@ export default {
                 this.email= '';
                 this.password= '';
                 this.errorMessage = '';
-                }, 3000);
+                }, 5000);
             }
         },
         async signup() {
@@ -158,7 +158,7 @@ export default {
                 this.errorMessage = error.response.data.error;
                 setTimeout(() => {
                 this.errorMessage = '';
-                }, 3000);
+                }, 5000);
             }
         },
   },
