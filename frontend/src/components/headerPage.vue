@@ -13,9 +13,7 @@
         <img alt="Logo de Groupomania" class="logo" src="../assets/images/logos/logo-black.png" />
       </div>
       <div class="nav-bar-header_menu">
-        <RouterLink to="/home">
-        <fa class="nav-bar-header_home" icon="house" />
-      </RouterLink>
+        <a href="#"><fa class="nav-bar-header_home" icon="house" @click="reloadFeed"/></a>
       <RouterLink to="/Post">
         <fa class="nav-bar-header_add-post" icon="circle-plus" />
       </RouterLink>
@@ -31,9 +29,7 @@
 
 <!--nav_bar_bottom-->
   <nav class="nav-bar_wrapper">
-    <RouterLink to="/home">
-      <fa class="nav-bar_home" icon="house" />
-    </RouterLink>
+     <a href="#"><fa class="nav-bar_home" icon="house" @click="reloadFeed" /></a> 
     <RouterLink to="/post">
       <fa class="nav-bar_add-post" icon="circle-plus" />
     </RouterLink>
@@ -58,5 +54,10 @@ export default {
       return this.$store.getters.user;
     }, 
   },
+  methods: {
+    reloadFeed() {
+        location.reload();
+    }
+  }
 };
 </script>
