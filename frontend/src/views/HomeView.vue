@@ -68,6 +68,7 @@
       commencer à partager du contenu</h2>
     </div>
 <!--if_there_is_no_post_end-->
+
   </main> 
 <!--post_end-->
   
